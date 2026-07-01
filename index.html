@@ -51,60 +51,51 @@
                 <span class="text-3xl">🍄</span>
                 <div>
                     <h1 class="text-xl font-bold text-stone-800">皮克敏蘑菇重生快速計算器 PWA</h1>
+                    <p class="text-xs text-stone-500 font-medium">手動輸入剩餘打倒時間，基準時間自動對時，一鍵鎖定倒數！</p>
                 </div>
             </div>
-            <!-- 當前時間與功能按鈕區 -->
-            <div class="flex items-center gap-2.5">
-                <!-- 說明按鈕 -->
-                <button onclick="openHelpModal()" class="text-xs bg-stone-100 hover:bg-stone-200 text-stone-600 font-bold px-3 py-2 rounded-xl transition flex items-center space-x-1">
-                    <span>📖</span>
-                    <span>使用說明</span>
-                </button>
-                <div class="text-sm text-emerald-700 bg-emerald-50 px-4 py-2 rounded-xl border border-emerald-100 font-mono font-bold" id="current-time-display">
-                    目前時間: --:--:--
+            <div class="flex items-center space-x-2">
+                <!-- 當前時間 -->
+                <div class="text-sm text-emerald-700 bg-emerald-50 px-3 py-2 rounded-xl border border-emerald-100 font-mono font-bold" id="current-time-display">
+                    --:--:--
                 </div>
+                <!-- 說明按鈕 -->
+                <button onclick="openHelpModal()" class="bg-stone-100 hover:bg-stone-200 text-stone-700 p-2 rounded-xl transition text-sm font-bold flex items-center space-x-1">
+                    <span>📖 說明指南</span>
+                </button>
             </div>
         </header>
 
-        <!-- 手機背景執行守護者面板 -->
-        <section class="bg-gradient-to-br from-emerald-800 to-teal-900 text-white rounded-2xl p-5 shadow-lg border border-emerald-700 mb-6">
-            <div class="flex items-center space-x-2.5 mb-3">
-                <span class="text-2xl">📱</span>
-                <h2 class="text-base font-bold">手機後台執行守護者（防休眠 / 浮動視窗）</h2>
+        <!-- 控制與背景守護快捷面板 (極簡化) -->
+        <section class="bg-gradient-to-br from-emerald-800 to-teal-900 text-white rounded-2xl p-4 shadow-md border border-emerald-700 mb-6 flex flex-wrap justify-between items-center gap-3">
+            <div class="flex items-center space-x-2">
+                <span class="text-xl">📱</span>
+                <span class="text-xs font-bold text-emerald-100">當您切換至遊戲時，建議啟動背景守護以確保警報 100% 準確播放：</span>
             </div>
-            <p class="text-xs text-emerald-100 leading-relaxed mb-4">
-                iOS 與 Android 系統在您切換回皮克敏遊戲時，會強迫後台瀏覽器休眠，導致計時暫停、音效不響。
-                點擊下方按鈕啟動<strong>「手機浮動視窗」</strong>，螢幕上會出現一個小小的倒數畫面。此時切換回遊戲，小視窗不僅可以隨時監控，更能強迫系統保持網頁在後台運作，讓 20 秒前警報與重生提示音 100% 準確響起！
-            </p>
-            <div class="flex flex-wrap gap-2.5">
+            <div class="flex flex-wrap gap-2">
                 <!-- 啟動 PiP 按鈕 -->
-                <button id="btn-pip" onclick="togglePip()" class="bg-white hover:bg-stone-100 text-emerald-900 font-extrabold text-xs px-4 py-2.5 rounded-xl transition flex items-center space-x-1.5 shadow-md active:translate-y-0.5">
+                <button id="btn-pip" onclick="togglePip()" class="bg-white hover:bg-stone-100 text-emerald-900 font-extrabold text-xs px-3.5 py-2 rounded-xl transition flex items-center space-x-1 shadow-md active:translate-y-0.5">
                     <span id="pip-btn-icon">📺</span>
                     <span id="pip-btn-text">啟動「手機浮動小視窗」</span>
                 </button>
                 <!-- 防止螢幕休眠按鈕 -->
-                <button id="btn-wakelock" onclick="toggleWakeLock()" class="bg-emerald-700/60 hover:bg-emerald-700/80 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition flex items-center space-x-1.5 border border-emerald-600">
+                <button id="btn-wakelock" onclick="toggleWakeLock()" class="bg-emerald-700/60 hover:bg-emerald-700/80 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition flex items-center space-x-1 border border-emerald-600">
                     <span id="wake-btn-icon">💡</span>
                     <span id="wake-btn-text">保持螢幕喚醒：未啟用</span>
                 </button>
             </div>
-
-            <!-- 實體畫布與視訊渲染預覽區 (避免隱藏導致手機瀏覽器不渲染 Canvas 視訊流) -->
-            <div class="mt-4 bg-stone-950 p-3 rounded-xl border border-stone-800 flex flex-col items-center">
-                <div class="text-[10px] text-stone-400 font-bold mb-1.5 self-start flex items-center">
-                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse mr-1.5"></span>
-                    子母畫面即時預覽螢幕 (手機防優化遮蔽)
-                </div>
-                <!-- 正常顯示以利瀏覽器分配資源 -->
-                <canvas id="pip-canvas" width="300" height="200" class="w-full max-w-[280px] rounded-lg border border-stone-850 shadow-inner bg-black"></canvas>
-                <video id="pip-video" autoplay playsinline muted class="w-1 h-1 opacity-0 pointer-events-none absolute"></video>
-            </div>
         </section>
+
+        <!-- 微米級無視覺定位容器 (避免手機瀏覽器不渲染 Canvas 視訊流) -->
+        <div style="position: fixed; width: 10px; height: 10px; bottom: 10px; right: 10px; opacity: 0.001; pointer-events: none; z-index: -9999; overflow: hidden;">
+            <canvas id="pip-canvas" width="300" height="240"></canvas>
+            <video id="pip-video" autoplay playsinline muted></video>
+        </div>
 
         <!-- 計算表格主結構 -->
         <main class="bg-white rounded-2xl shadow-sm border border-stone-200/60 overflow-hidden">
             
-            <!-- 表格標題列 (桌機版) -->
+            <!-- 表格標題列 (PC版顯示，手機版隱藏) -->
             <div class="hidden md:grid grid-cols-12 gap-4 bg-stone-100 p-4 font-bold text-stone-600 text-sm border-b border-stone-200">
                 <div class="col-span-3">📍 地點名稱 (手動)</div>
                 <div class="col-span-3 text-center">🕒 基準對時 (自動)</div>
@@ -141,47 +132,46 @@
 
     </div>
 
+    <!-- 說明指南 滿版彈出視窗 (Modal) -->
+    <div id="help-modal" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="p-5 border-b border-stone-100 flex justify-between items-center bg-stone-50">
+                <h3 class="font-bold text-stone-800 flex items-center space-x-1.5">
+                    <span>📖</span>
+                    <span>皮克敏計算器使用指南</span>
+                </h3>
+                <button onclick="closeHelpModal()" class="text-stone-400 hover:text-stone-600 font-bold text-xl p-1">&times;</button>
+            </div>
+            <div class="p-6 overflow-y-auto space-y-4 text-sm text-stone-600 leading-relaxed">
+                <h4 class="font-bold text-emerald-800 text-base">🍄 蘑菇重生原理</h4>
+                <p>皮克敏 Bloom 中的蘑菇被擊破打倒後，固定會於 <strong>5 分鐘後</strong> 在原位重新刷出一顆新蘑菇。本計算器旨在協助您精準對時與鎖定這段冷卻時間。</p>
+                
+                <h4 class="font-bold text-emerald-800 text-base">📱 手機防休眠機制（守護者）</h4>
+                <p>iOS 與 Android 系統在您切換回遊戲時，會強迫背景瀏覽器休眠，導致倒數計時暫停、音效不響。我們提供了以下兩種絕佳解法：</p>
+                <ul class="list-disc pl-5 space-y-2">
+                    <li><strong>📺 手機浮動小視窗（Android / 電腦端 100% 成功）</strong>：螢幕上會出現一個小小的倒數畫面，不僅能隨時監控，更強迫系統判定網頁「正在播放視訊」而不休眠，讓警報音效 100% 準確響起！</li>
+                    <li><strong>💡 保持螢幕喚醒（iOS Safari / 雙手機用戶推薦）</strong>：鎖定螢幕常亮防止休眠，將手機放於身旁，20秒前警報與重生提示音精準響起。</li>
+                </ul>
+
+                <h4 class="font-bold text-emerald-800 text-base">📲 如何將它做成手機 App？</h4>
+                <p>本計算器已完整內建 PWA 規格設定。用手機瀏覽器打開您的 Vercel 網址：</p>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li><strong>iPhone (Safari)</strong>：點擊分享按鈕 ➡️ 選擇「加入主畫面」即可。</li>
+                    <li><strong>Android (Chrome)</strong>：點擊三點選單 ➡️ 選擇「安裝應用程式」或「新增至主畫面」。</li>
+                </ul>
+            </div>
+            <div class="p-4 border-t border-stone-100 bg-stone-50 flex justify-end">
+                <button onclick="closeHelpModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2 px-5 rounded-xl transition">
+                    我知道了
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- 彈出通知 (Toast) -->
     <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-stone-900 text-white text-xs px-4 py-3 rounded-full shadow-lg opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center space-x-1.5">
         <span id="toast-icon">✨</span>
         <span id="toast-msg">已鎖定計時</span>
-    </div>
-
-    <!-- 📖 使用說明 Modal (彈出視窗) -->
-    <div id="help-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
-        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl transform scale-95 transition-transform duration-300" id="help-modal-content">
-            <div class="flex justify-between items-center mb-4 pb-2 border-b border-stone-100">
-                <h3 class="text-lg font-bold text-stone-800 flex items-center gap-2">
-                    <span>🍄</span> 皮克敏重生計算器使用說明
-                </h3>
-                <button onclick="closeHelpModal()" class="text-stone-400 hover:text-stone-600 text-2xl font-bold leading-none">&times;</button>
-            </div>
-            
-            <div class="space-y-4 text-xs text-stone-600 leading-relaxed max-h-[60vh] overflow-y-auto pr-1">
-                <div>
-                    <h4 class="font-bold text-sm text-emerald-800 mb-1">🌱 運作與重生時間推算原理</h4>
-                    <p>當您在遊玩時：
-                        <br>1. 輸入您所在的<strong>「地點名稱」</strong>。
-                        <br>2. 填入蘑菇上顯示的<strong>「剩餘打倒時間」</strong>（支援格式如 24:35、24分35秒、或純數字如 24）。
-                        <br>3. 系統此時會與「目前時間」自動對時，推算重生刷新時間。
-                        <br>4. 點擊<strong>「開始」</strong>鎖定，該格會自動開始進行精準倒數，並在<strong>重生前 20 秒</strong>播放預警警報，<strong>重生當下</strong>播放重生提示音！
-                    </p>
-                </div>
-                <div>
-                    <h4 class="font-bold text-sm text-emerald-800 mb-1">📱 手機防後台休眠（重要）</h4>
-                    <p>智慧型手機（iOS 與 Android）為了省電，在您切回皮克敏 Bloom 遊戲時會迅速將背景瀏覽器休眠，導致倒數中斷與音效不響。</p>
-                    <p class="mt-1 font-semibold text-stone-700">💡 兩招完美解決方案：</p>
-                    <ul class="list-disc list-inside space-y-1 mt-1 pl-1">
-                        <li><strong>Android 用戶</strong>：點選「啟動手機浮動小視窗（子母畫面）」。畫面中會出現微型倒數卡片，此時開啟皮克敏遊戲仍可實時監看，並強制系統不休眠，100% 準確響鈴。</li>
-                        <li><strong>iOS / iPhone 用戶</strong>：點選「保持螢幕喚醒：運作中」。將手機螢幕設定為長亮不變暗，並把網頁放著，倒數完成前便可精準收到 20 秒前警告聲與完成音。</li>
-                    </ul>
-                </div>
-            </div>
-
-            <button onclick="closeHelpModal()" class="mt-6 w-full bg-emerald-600 hover:bg-emerald-700 active:translate-y-0.5 text-white font-bold py-2.5 rounded-xl transition text-sm shadow-md">
-                我知道了，開始對時！
-            </button>
-        </div>
     </div>
 
     <script>
@@ -194,9 +184,763 @@
         let wakeLock = null;
         let audioCtx = null;
 
-        // 說明視窗控制
+        // 喚醒並初始化共享的音訊上下文，解決移動設備靜音防護
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        // PWA 動態 Manifest 與 Service Worker 註冊器
+        window.onload = function() {
+            // 載入 LocalStorage
+            const stored = localStorage.getItem('pikmin_simple_slots');
+            if (stored) {
+                try {
+                    slots = JSON.parse(stored);
+                    slots.forEach(s => {
+                        if (s.remainingTime === undefined) {
+                            const m = s.min !== undefined ? s.min : 24;
+                            const sec = s.sec !== undefined ? s.sec : 35;
+                            s.remainingTime = `${m}:${String(sec).padStart(2, '0')}`;
+                        }
+                    });
+                } catch(e) {
+                    slots = [];
+                }
+            }
+
+            // 檢查並自動注入使用者要求的兩個手動計時項目 (公園涼亭 09:44:25, 龍湖廟 09:42:36)
+            const hasPavilion = slots.some(s => s.location === '公園涼亭');
+            const hasLonghu = slots.some(s => s.location === '龍湖廟');
+            const today = new Date();
+
+            if (!hasPavilion) {
+                const respawnTime = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9, 44, 25).getTime();
+                const defeatTime = respawnTime - (5 * 60 * 1000);
+                slots.unshift({
+                    id: 'slot_user_pavilion_' + Date.now(),
+                    location: '公園涼亭',
+                    remainingTime: '已在冷卻中',
+                    isLocked: true,
+                    lockTimestamp: defeatTime,
+                    targetDefeatTime: defeatTime,
+                    targetRespawnTime: respawnTime,
+                    alarmPlayed: false,
+                    warning20sPlayed: false
+                });
+            }
+
+            if (!hasLonghu) {
+                const respawnTime = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9, 42, 36).getTime();
+                const defeatTime = respawnTime - (5 * 60 * 1000);
+                slots.unshift({
+                    id: 'slot_user_longhu_' + Date.now(),
+                    location: '龍湖廟',
+                    remainingTime: '已在冷卻中',
+                    isLocked: true,
+                    lockTimestamp: defeatTime,
+                    targetDefeatTime: defeatTime,
+                    targetRespawnTime: respawnTime,
+                    alarmPlayed: false,
+                    warning20sPlayed: false
+                });
+            }
+
+            if (slots.length === 0) {
+                for (let i = 0; i < DEFAULT_ROW_COUNT; i++) {
+                    slots.push(createEmptySlotObject());
+                }
+            }
+
+            saveSlots();
+            renderRows();
+
+            setInterval(updateLoop, 1000);
+            updateLoop();
+
+            // 監聽子母畫面關閉事件
+            const video = document.getElementById('pip-video');
+            video.addEventListener('leavepictureinpicture', () => {
+                document.getElementById('pip-btn-text').innerText = '啟動「手機浮動小視窗」';
+                document.getElementById('pip-btn-icon').innerText = '📺';
+                if (pipInterval) {
+                    clearInterval(pipInterval);
+                    pipInterval = null;
+                }
+                showToast("⏹️ 浮動視窗已關閉");
+            });
+        };
+
+        // 產生新欄位資料物件
+        function createEmptySlotObject() {
+            return {
+                id: 'slot_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+                location: '',
+                remainingTime: '24:35',
+                isLocked: false,
+                lockTimestamp: null,
+                targetDefeatTime: null,
+                targetRespawnTime: null,
+                alarmPlayed: false,
+                warning20sPlayed: false
+            };
+        }
+
+        function addNewRow() {
+            slots.push(createEmptySlotObject());
+            saveSlots();
+            renderRows();
+            showToast("✨ 已新增一行欄位");
+        }
+
+        function saveSlots() {
+            localStorage.setItem('pikmin_simple_slots', JSON.stringify(slots));
+        }
+
+        function formatTimeString(date) {
+            if (!date) return "--:--:--";
+            const h = String(date.getHours()).padStart(2, '0');
+            const m = String(date.getMinutes()).padStart(2, '0');
+            const s = String(date.getSeconds()).padStart(2, '0');
+            return `${h}:${m}:${s}`;
+        }
+
+        function formatCountdown(totalSeconds) {
+            if (totalSeconds <= 0) return "00:00";
+            const m = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+            const s = String(Math.floor(totalSeconds % 60)).padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function parseRemainingTime(str) {
+            if (!str) return 0;
+            str = str.trim().toLowerCase();
+            if (str === '已在冷卻中') return 0;
+
+            let hours = 0, minutes = 0, seconds = 0;
+            const hrMatch = str.match(/(\d+)\s*(?:時|h)/);
+            const minMatch = str.match(/(\d+)\s*(?:分|m)/);
+            const secMatch = str.match(/(\d+)\s*(?:秒|s)/);
+
+            if (hrMatch || minMatch || secMatch) {
+                if (hrMatch) hours = parseInt(hrMatch[1]) || 0;
+                if (minMatch) minutes = parseInt(minMatch[1]) || 0;
+                if (secMatch) seconds = parseInt(secMatch[1]) || 0;
+                return ((hours * 3600) + (minutes * 60) + seconds) * 1000;
+            }
+
+            const normalized = str.replace(/\s+/g, ':');
+            const parts = normalized.split(':').map(p => parseInt(p) || 0);
+
+            if (parts.length === 3) {
+                hours = parts[0];
+                minutes = parts[1];
+                seconds = parts[2];
+            } else if (parts.length === 2) {
+                minutes = parts[0];
+                seconds = parts[1];
+            } else if (parts.length === 1 && !isNaN(parts[0])) {
+                minutes = parts[0];
+            }
+
+            return ((hours * 3600) + (minutes * 60) + seconds) * 1000;
+        }
+
+        function deleteRow(id) {
+            slots = slots.filter(s => s.id !== id);
+            saveSlots();
+            renderRows();
+        }
+
+        function resetAllRows() {
+            slots = [];
+            for (let i = 0; i < DEFAULT_ROW_COUNT; i++) {
+                slots.push(createEmptySlotObject());
+            }
+            saveSlots();
+            renderRows();
+            showToast("🧹 已清除全部並恢復預設值");
+        }
+
+        function toggleLock(id) {
+            getAudioContext(); // 互動解鎖音效限制
+            const slot = slots.find(s => s.id === id);
+            if (!slot) return;
+
+            if (!slot.isLocked) {
+                const now = Date.now();
+                const totalOffsetMs = parseRemainingTime(slot.remainingTime);
+                
+                if (totalOffsetMs <= 0 && slot.remainingTime !== '已在冷卻中') {
+                    showToast("⚠️ 請輸入有效的打倒時間！", "warning");
+                    return;
+                }
+
+                slot.isLocked = true;
+                slot.lockTimestamp = now;
+                slot.targetDefeatTime = now + totalOffsetMs;
+                slot.targetRespawnTime = slot.targetDefeatTime + (5 * 60 * 1000);
+                slot.alarmPlayed = false;
+                slot.warning20sPlayed = false;
+                showToast("🔒 已開始計時！重生時間已鎖定");
+            } else {
+                slot.isLocked = false;
+                slot.lockTimestamp = null;
+                slot.targetDefeatTime = null;
+                slot.targetRespawnTime = null;
+                if (slot.remainingTime === '已在冷卻中') {
+                    slot.remainingTime = '24:35';
+                }
+                slot.alarmPlayed = false;
+                slot.warning20sPlayed = false;
+                showToast("🔓 已解除計時狀態");
+            }
+
+            saveSlots();
+            renderRows();
+        }
+
+        function handleInputChange(id, field, val) {
+            const slot = slots.find(s => s.id === id);
+            if (!slot) return;
+
+            if (field === 'location') slot.location = val;
+            if (field === 'remainingTime') slot.remainingTime = val;
+
+            saveSlots();
+            updateLoop();
+        }
+
+        function copySlotInfo(id) {
+            const slot = slots.find(s => s.id === id);
+            if (!slot) return;
+
+            let respawnStr = "";
+            if (slot.isLocked && slot.targetRespawnTime) {
+                respawnStr = formatTimeString(new Date(slot.targetRespawnTime));
+            } else {
+                const now = Date.now();
+                const offsetMs = parseRemainingTime(slot.remainingTime);
+                respawnStr = formatTimeString(new Date(now + offsetMs + (5 * 60 * 1000)));
+            }
+
+            const locName = slot.location.trim() || "未命名地點";
+            const shareText = `🍄【皮克敏重生】📍 地點：${locName} ➡️ 🌱 重生時間：${respawnStr}`;
+
+            const tempInput = document.createElement("textarea");
+            tempInput.value = shareText;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            showToast("📋 已複製分享文字！");
+        }
+
+        function playWarningSound() {
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+                const beats = [0, 0.2, 0.4];
+                beats.forEach((delay) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(987.77, now + delay);
+                    gain.gain.setValueAtTime(0.25, now + delay);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.15);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now + delay);
+                    osc.stop(now + delay + 0.18);
+                });
+            } catch (e) {
+                console.warn("音效播放失敗：需要使用者點擊過網頁以授權。");
+            }
+        }
+
+        function playRespawnSound() {
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+                const chords = [
+                    { f1: 523.25, f2: 1046.50 },
+                    { f1: 659.25, f2: 1318.51 },
+                    { f1: 783.99, f2: 1567.98 },
+                    { f1: 1046.50, f2: 2093.00 }
+                ];
+                chords.forEach((chord, i) => {
+                    const delay = i * 0.08;
+                    
+                    const osc1 = ctx.createOscillator();
+                    const gain1 = ctx.createGain();
+                    osc1.type = 'triangle';
+                    osc1.frequency.setValueAtTime(chord.f1, now + delay);
+                    gain1.gain.setValueAtTime(0.25, now + delay);
+                    gain1.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.4);
+                    osc1.connect(gain1);
+                    gain1.connect(ctx.destination);
+                    osc1.start(now + delay);
+                    osc1.stop(now + delay + 0.45);
+
+                    const osc2 = ctx.createOscillator();
+                    const gain2 = ctx.createGain();
+                    osc2.type = 'sine';
+                    osc2.frequency.setValueAtTime(chord.f2, now + delay);
+                    gain2.gain.setValueAtTime(0.12, now + delay);
+                    gain2.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.3);
+                    osc2.connect(gain2);
+                    gain2.connect(ctx.destination);
+                    osc2.start(now + delay);
+                    osc2.stop(now + delay + 0.35);
+                });
+            } catch (e) {
+                console.warn("音效播放失敗：需要使用者點擊過網頁以授權。");
+            }
+        }
+
+        function testSounds() {
+            getAudioContext(); // 互動解鎖音效限制
+            showToast("🔊 測試：20 秒前預警音效...", "warning");
+            playWarningSound();
+            
+            setTimeout(() => {
+                showToast("🌱 測試：重生完成音效！", "respawn");
+                playRespawnSound();
+            }, 1200);
+        }
+
         function openHelpModal() {
             const modal = document.getElementById('help-modal');
-            const content = document.getElementById('help-modal-content');
             modal.classList.remove('opacity-0', 'pointer-events-none');
-            content.classList.remove('scale-
+        }
+
+        function closeHelpModal() {
+            const modal = document.getElementById('help-modal');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        // 📱 核心功能：在背景產生完全靜音的音軌，防止 iOS/Android 背景自動暫停子母畫面
+        function createSilenceAudioTrack() {
+            try {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                const ctx = new AudioContextClass();
+                const dst = ctx.createMediaStreamDestination();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                gain.gain.value = 0; // 完全靜音
+                osc.connect(gain);
+                gain.connect(dst);
+                osc.start();
+                return dst.stream.getAudioTracks()[0];
+            } catch (e) {
+                console.warn("建立靜音防睡眠音軌失敗：", e);
+                return null;
+            }
+        }
+
+        async function togglePip() {
+            getAudioContext(); // 互動解鎖音效限制
+            const video = document.getElementById('pip-video');
+            const canvas = document.getElementById('pip-canvas');
+            
+            // 1. 針對 iOS 裝置的優雅降級判定與提醒
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            if (isIOS) {
+                showToast("🍎 Apple 系統限制：iOS Safari 不支援網頁畫布轉子母畫面。請改用下方的「保持螢幕喚醒」功能，效果完全相同！", "warning");
+                return;
+            }
+
+            // 2. 判定是否正處於子母畫面中 (相容標準與 iOS 模式)
+            const isCurrentlyPip = document.pictureInPictureElement || 
+                                   (video.webkitPresentationMode === 'picture-in-picture');
+
+            if (isCurrentlyPip) {
+                try {
+                    if (document.exitPictureInPicture) {
+                        await document.exitPictureInPicture();
+                    } else if (video.webkitSetPresentationMode) {
+                        video.webkitSetPresentationMode('inline');
+                    }
+                } catch (err) {
+                    console.error("退出子母畫面出錯:", err);
+                }
+            } else {
+                try {
+                    if (!video.requestPictureInPicture) {
+                        showToast("❌ 您的瀏覽器核心不支援子母畫面 (PiP) 功能", "warning");
+                        return;
+                    }
+
+                    // 3. 確保畫布在擷取前已有渲染內容，防止寬高為 0x0 導致手機 Chrome 拒絕啟動
+                    drawPipCanvas();
+                    if (!pipInterval) {
+                        pipInterval = setInterval(drawPipCanvas, 200);
+                    }
+
+                    // 4. 將畫布串流與靜音防休眠音軌綁定至視訊元素
+                    if (video.srcObject === null) {
+                        const stream = canvas.captureStream(5);
+                        const silentTrack = createSilenceAudioTrack();
+                        if (silentTrack) {
+                            stream.addTrack(silentTrack);
+                        }
+                        video.srcObject = stream;
+                    }
+
+                    // 5. 播放視訊並立即請求 PiP（不進行 await video.play()，確保維持在同一個點擊事件手勢鏈中）
+                    video.play().catch(err => console.log("視訊播放預防性錯誤捕獲:", err));
+                    
+                    await video.requestPictureInPicture();
+                    
+                    document.getElementById('pip-btn-text').innerText = '關閉「手機浮動小視窗」';
+                    document.getElementById('pip-btn-icon').innerText = '⏹️';
+                    showToast("📱 浮動視窗已啟動！您可以放心地切換回皮克敏遊戲囉！");
+                } catch (err) {
+                    console.error("啟動子母畫面失敗:", err);
+                    showToast("❌ 啟動失敗，請先點擊網頁任意處，再試一次！", "warning");
+                }
+            }
+        }
+
+        function drawPipCanvas() {
+            const canvas = document.getElementById('pip-canvas');
+            const ctx = canvas.getContext('2d');
+            const now = Date.now();
+
+            ctx.fillStyle = '#111827';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#10b981';
+            ctx.font = 'bold 15px system-ui, -apple-system, sans-serif';
+            ctx.fillText('🍄 皮克敏重生監控中', 15, 30);
+
+            const nowStr = formatTimeString(new Date());
+            ctx.fillStyle = '#6b7280';
+            ctx.font = 'bold 11px monospace';
+            ctx.fillText(`時間: ${nowStr}`, 15, 52);
+
+            ctx.strokeStyle = '#374151';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(15, 62);
+            ctx.lineTo(285, 62);
+            ctx.stroke();
+
+            let activeCount = 0;
+            let y = 88;
+
+            slots.forEach(s => {
+                if (s.isLocked) {
+                    activeCount++;
+                    if (activeCount > 4) return;
+
+                    ctx.fillStyle = '#f9fafb';
+                    ctx.font = 'bold 13px system-ui, -apple-system, sans-serif';
+                    let locText = s.location.trim() || '未命名地點';
+                    if (locText.length > 8) locText = locText.substring(0, 7) + '..';
+                    ctx.fillText(`📍 ${locText}`, 15, y);
+
+                    const msToRespawn = s.targetRespawnTime - now;
+                    const secLeft = Math.ceil(msToRespawn / 1000);
+
+                    let timeText = '';
+                    if (secLeft > 0) {
+                        timeText = formatCountdown(secLeft);
+                        ctx.fillStyle = secLeft <= 30 ? '#ef4444' : '#f59e0b';
+                    } else {
+                        timeText = '已重生！';
+                        ctx.fillStyle = '#34d399';
+                    }
+
+                    ctx.font = 'bold 14px monospace';
+                    ctx.fillText(timeText, 210, y);
+
+                    y += 35;
+                }
+            });
+
+            if (activeCount === 0) {
+                ctx.fillStyle = '#9ca3af';
+                ctx.font = '13px system-ui, -apple-system, sans-serif';
+                ctx.fillText('尚未鎖定任何蘑菇倒數', 15, 110);
+                ctx.font = '11px system-ui, -apple-system, sans-serif';
+                ctx.fillText('請在計算器中輸入打倒時間並點「開始」', 15, 135);
+            }
+        }
+
+        async function toggleWakeLock() {
+            getAudioContext(); // 互動解鎖音效限制
+            if (!('wakeLock' in navigator)) {
+                showToast("❌ 您的手機不支援保持常亮功能", "warning");
+                return;
+            }
+
+            if (wakeLock !== null) {
+                try {
+                    await wakeLock.release();
+                    wakeLock = null;
+                    document.getElementById('wake-btn-text').innerText = '保持螢幕喚醒：已關閉';
+                    document.getElementById('wake-btn-icon').innerText = '💡';
+                    showToast("💡 螢幕自動休眠設定已還原");
+                } catch (err) {
+                    console.error(err);
+                }
+            } else {
+                try {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                    document.getElementById('wake-btn-text').innerText = '保持螢幕喚醒：運作中';
+                    document.getElementById('wake-btn-icon').innerText = '🌟';
+                    showToast("🌟 螢幕已鎖定常亮！手機不會自動變暗");
+                } catch (err) {
+                    console.error("螢幕喚醒失敗:", err);
+                    showToast("❌ 鎖定失敗，請點選網頁重試", "warning");
+                }
+            }
+        }
+
+        function updateLoop() {
+            const now = Date.now();
+            const nowTimeStr = formatTimeString(new Date(now));
+            
+            document.getElementById('current-time-display').innerText = `目前時間: ${nowTimeStr}`;
+
+            let stateChanged = false;
+            slots.forEach(s => {
+                const rowEl = document.getElementById(`row-${s.id}`);
+                const baseTimeEl = document.getElementById(`base-time-${s.id}`);
+                const respawnTimeEl = document.getElementById(`respawn-time-${s.id}`);
+                const countdownEl = document.getElementById(`countdown-${s.id}`);
+                
+                if (!rowEl || !baseTimeEl || !respawnTimeEl || !countdownEl) return;
+
+                let baseTimeStr = '--:--:--';
+                let respawnTimeStr = '--:--:--';
+                let countdownStr = '';
+                let isUrgent = false;
+                let isExpired = false;
+
+                if (s.isLocked && s.targetRespawnTime) {
+                    baseTimeStr = formatTimeString(new Date(s.lockTimestamp));
+                    const msToRespawn = s.targetRespawnTime - now;
+                    const secLeft = Math.ceil(msToRespawn / 1000);
+                    
+                    respawnTimeStr = formatTimeString(new Date(s.targetRespawnTime));
+                    
+                    if (secLeft > 0) {
+                        countdownStr = `⏳ 剩餘 ${formatCountdown(secLeft)}`;
+                        if (secLeft <= 30) {
+                            isUrgent = true;
+                        }
+                    } else {
+                        countdownStr = `🌱 已重生！`;
+                        isExpired = true;
+                    }
+
+                    if (msToRespawn <= 20000 && msToRespawn > 0 && !s.warning20sPlayed) {
+                        s.warning20sPlayed = true;
+                        playWarningSound();
+                        showToast(`⏳ 【${s.location || "未命名地點"}】將於 20 秒後重生！`, "warning");
+                        stateChanged = true;
+                    }
+
+                    if (msToRespawn <= 0 && !s.alarmPlayed) {
+                        s.alarmPlayed = true;
+                        playRespawnSound();
+                        showToast(`🌱 【${s.location || "未命名地點"}】已完成重生！`, "respawn");
+                        stateChanged = true;
+                    }
+                } else {
+                    baseTimeStr = nowTimeStr;
+                    const offsetMs = parseRemainingTime(s.remainingTime);
+                    if (offsetMs > 0) {
+                        const estDefeat = now + offsetMs;
+                        const estRespawn = estDefeat + (5 * 60 * 1000);
+                        respawnTimeStr = formatTimeString(new Date(estRespawn));
+                        countdownStr = "📡 對時中 (即時加算)";
+                    } else {
+                        respawnTimeStr = "--:--:--";
+                        countdownStr = "請設定時間";
+                    }
+                }
+
+                baseTimeEl.innerText = baseTimeStr;
+                respawnTimeEl.innerText = respawnTimeStr;
+                countdownEl.innerText = countdownStr;
+
+                rowEl.classList.remove('urgent-row', 'bg-stone-50', 'text-stone-400', 'bg-emerald-50/20');
+                if (isUrgent) {
+                    rowEl.classList.add('urgent-row');
+                    baseTimeEl.className = "font-mono text-sm font-bold text-red-500";
+                    respawnTimeEl.className = "font-mono text-base font-extrabold text-red-600";
+                    countdownEl.className = "text-[10px] text-red-500 font-bold mt-0.5";
+                } else if (isExpired) {
+                    rowEl.classList.add('bg-stone-50', 'text-stone-400');
+                    baseTimeEl.className = "font-mono text-sm font-medium text-stone-400";
+                    respawnTimeEl.className = "font-mono text-base font-extrabold text-stone-400";
+                    countdownEl.className = "text-[10px] text-stone-400 font-medium mt-0.5";
+                } else if (s.isLocked) {
+                    rowEl.classList.add('bg-emerald-50/20');
+                    baseTimeEl.className = "font-mono text-sm font-medium text-stone-500";
+                    respawnTimeEl.className = "font-mono text-base font-extrabold text-emerald-700";
+                    countdownEl.className = "text-[10px] text-stone-400 font-medium mt-0.5";
+                } else {
+                    baseTimeEl.className = "font-mono text-sm font-bold text-emerald-600 animate-pulse";
+                    respawnTimeEl.className = "font-mono text-base font-extrabold text-stone-700";
+                    countdownEl.className = "text-[10px] text-emerald-600 font-semibold mt-0.5";
+                }
+            });
+
+            // 背景繪圖同步到 Canvas（不論 PiP 狀態如何皆維持繪製）
+            drawPipCanvas();
+
+            if (stateChanged) {
+                saveSlots();
+            }
+        }
+
+        function renderRows() {
+            const container = document.getElementById('rows-container');
+            const now = Date.now();
+            const nowTimeStr = formatTimeString(new Date(now));
+            let html = '';
+
+            slots.forEach((s) => {
+                let baseTimeStr = '--:--:--';
+                let respawnTimeStr = '--:--:--';
+                let countdownStr = '';
+                let isUrgent = false;
+                let isExpired = false;
+
+                if (s.isLocked) {
+                    baseTimeStr = formatTimeString(new Date(s.lockTimestamp));
+                    const msToRespawn = s.targetRespawnTime - now;
+                    const secLeft = Math.ceil(msToRespawn / 1000);
+                    respawnTimeStr = formatTimeString(new Date(s.targetRespawnTime));
+                    if (secLeft > 0) {
+                        countdownStr = `⏳ 剩餘 ${formatCountdown(secLeft)}`;
+                        if (secLeft <= 30) isUrgent = true;
+                    } else {
+                        countdownStr = `🌱 已重生！`;
+                        isExpired = true;
+                    }
+                } else {
+                    baseTimeStr = nowTimeStr;
+                    const offsetMs = parseRemainingTime(s.remainingTime);
+                    if (offsetMs > 0) {
+                        const estDefeat = now + offsetMs;
+                        const estRespawn = estDefeat + (5 * 60 * 1000);
+                        respawnTimeStr = formatTimeString(new Date(estRespawn));
+                        countdownStr = "📡 對時中 (即時加算)";
+                    } else {
+                        respawnTimeStr = "--:--:--";
+                        countdownStr = "請設定時間";
+                    }
+                }
+
+                let rowBgClass = '';
+                if (isUrgent) {
+                    rowBgClass = 'urgent-row';
+                } else if (isExpired) {
+                    rowBgClass = 'bg-stone-50 text-stone-400';
+                } else if (s.isLocked) {
+                    rowBgClass = 'bg-emerald-50/20';
+                }
+
+                html += `
+                <!-- 行槽 (${s.id}) -->
+                <div id="row-${s.id}" class="flex flex-col md:grid md:grid-cols-12 gap-3 md:gap-4 p-4 items-stretch md:items-center transition-all duration-200 ${rowBgClass}">
+                    
+                    <!-- 1. 地點手動輸入 -->
+                    <div class="md:col-span-3">
+                        <input type="text" 
+                               value="${s.location}" 
+                               placeholder="📍 輸入地點 (例如: 捷運站)" 
+                               oninput="handleInputChange('${s.id}', 'location', this.value)"
+                               ${s.isLocked ? 'disabled' : ''}
+                               class="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition text-sm disabled:opacity-75 disabled:bg-stone-100 font-medium">
+                    </div>
+
+                    <!-- 手機端專屬：三等分微型資訊網格 (在 PC 版展開為 contents) -->
+                    <div class="grid grid-cols-3 gap-2 items-center md:contents">
+                        
+                        <!-- 2. 基準對時 (自動) -->
+                        <div class="flex flex-col md:block md:col-span-3 text-center bg-stone-50 md:bg-transparent p-2 md:p-0 rounded-xl border border-stone-100 md:border-0">
+                            <span class="md:hidden text-[9px] text-stone-400 font-black block mb-0.5">🕒 基準</span>
+                            <span id="base-time-${s.id}" class="font-mono text-xs md:text-sm font-bold text-emerald-600">
+                                ${baseTimeStr}
+                            </span>
+                        </div>
+
+                        <!-- 3. 剩餘打倒時間 (手動) -->
+                        <div class="flex flex-col md:block md:col-span-2 text-center bg-stone-50 md:bg-transparent p-1.5 md:p-0 rounded-xl border border-stone-100 md:border-0">
+                            <span class="md:hidden text-[9px] text-stone-400 font-black block mb-1">⏳ 剩餘</span>
+                            <input type="text" 
+                                   value="${s.remainingTime}" 
+                                   placeholder="24:35" 
+                                   oninput="handleInputChange('${s.id}', 'remainingTime', this.value)"
+                                   ${s.isLocked ? 'disabled' : ''}
+                                   class="w-full px-1 py-1 bg-white md:bg-stone-50 border border-stone-200 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition text-xs md:text-sm text-center font-bold font-mono disabled:opacity-75 disabled:bg-stone-100">
+                        </div>
+
+                        <!-- 4. 預估重生時間 (動態計算) -->
+                        <div class="flex flex-col md:block md:col-span-2 text-center bg-emerald-50/20 md:bg-transparent p-2 md:p-0 rounded-xl border border-emerald-100/50 md:border-0">
+                            <span class="md:hidden text-[9px] text-emerald-700 font-black block mb-0.5">🌱 重生</span>
+                            <div class="text-center">
+                                <div id="respawn-time-${s.id}" class="font-mono text-xs md:text-base font-extrabold ${s.isLocked ? (isUrgent ? 'text-red-600' : 'text-emerald-700') : 'text-stone-700'}">
+                                    ${respawnTimeStr}
+                                </div>
+                                <div id="countdown-${s.id}" class="text-[9px] md:text-[10px] ${isUrgent ? 'text-red-500 font-bold' : 'text-stone-400'} font-medium mt-0.5">
+                                    ${countdownStr}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- 5. 控制與複製按鈕 -->
+                    <div class="flex items-center justify-between md:justify-end gap-2 md:col-span-2 pt-2 md:pt-0 border-t border-dashed border-stone-100 md:border-t-0">
+                        <!-- 手機版左下角的小裝飾標籤 -->
+                        <span class="md:hidden text-[10px] text-stone-400 font-bold">⚙️ 操作選項</span>
+                        
+                        <div class="flex items-center gap-1">
+                            <!-- 開始/解鎖 -->
+                            <button onclick="toggleLock('${s.id}')" 
+                                    class="text-xs font-bold py-1.5 px-3 rounded-lg transition-colors ${
+                                        s.isLocked 
+                                        ? 'bg-amber-100 hover:bg-amber-200 text-amber-800' 
+                                        : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                                    }">
+                                ${s.isLocked ? '解鎖' : '開始'}
+                            </button>
+                            
+                            <!-- 複製 -->
+                            <button onclick="copySlotInfo('${s.id}')" 
+                                    title="複製分享文字" 
+                                    class="p-1.5 text-stone-400 hover:text-emerald-600 hover:bg-stone-100 rounded-lg transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                            </button>
+
+                            <!-- 刪除 -->
+                            <button onclick="deleteRow('${s.id}')" 
+                                    title="刪除此列" 
+                                    class="p-1.5 text-stone-400 hover:text-red-500 hover:bg-stone-100 rounded-lg transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
