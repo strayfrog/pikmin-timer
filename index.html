@@ -46,56 +46,62 @@
     <div class="max-w-5xl mx-auto px-4 py-6">
         
         <!-- 標頭區 -->
-        <header class="flex flex-col md:flex-row justify-between items-center bg-white p-5 rounded-2xl shadow-sm border border-stone-200/60 mb-6 gap-4">
+        <header class="flex justify-between items-center bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-stone-200/60 mb-6 gap-4">
             <div class="flex items-center space-x-3">
                 <span class="text-3xl">🍄</span>
                 <div>
-                    <h1 class="text-xl font-bold text-stone-800">皮克敏蘑菇重生快速計算器 PWA</h1>
-                    <p class="text-xs text-stone-500 font-medium">手動輸入剩餘打倒時間，基準時間自動對時，一鍵鎖定倒數！</p>
+                    <h1 class="text-base md:text-xl font-bold text-stone-800">皮克敏蘑菇重生計算器 PWA</h1>
+                    <p class="hidden md:block text-xs text-stone-500 font-medium">基準時間自動對時，一鍵鎖定倒數！</p>
+                    <div class="text-[11px] md:text-sm text-emerald-700 font-mono font-bold mt-0.5" id="current-time-display">
+                        目前時間: --:--:--
+                    </div>
                 </div>
             </div>
-            <div class="flex items-center space-x-2">
-                <!-- 當前時間 -->
-                <div class="text-sm text-emerald-700 bg-emerald-50 px-3 py-2 rounded-xl border border-emerald-100 font-mono font-bold" id="current-time-display">
-                    --:--:--
-                </div>
-                <!-- 說明按鈕 -->
-                <button onclick="openHelpModal()" class="bg-stone-100 hover:bg-stone-200 text-stone-700 p-2 rounded-xl transition text-sm font-bold flex items-center space-x-1">
-                    <span>📖 說明指南</span>
-                </button>
-            </div>
+            <!-- 說明指南按鈕 -->
+            <button onclick="toggleGuideModal()" class="text-xs bg-stone-100 hover:bg-stone-200 active:translate-y-0.5 text-stone-700 font-bold py-2 px-3 rounded-xl transition flex items-center space-x-1">
+                <span>📖 說明指南</span>
+            </button>
         </header>
 
-        <!-- 控制與背景守護快捷面板 (極簡化) -->
-        <section class="bg-gradient-to-br from-emerald-800 to-teal-900 text-white rounded-2xl p-4 shadow-md border border-emerald-700 mb-6 flex flex-wrap justify-between items-center gap-3">
-            <div class="flex items-center space-x-2">
-                <span class="text-xl">📱</span>
-                <span class="text-xs font-bold text-emerald-100">當您切換至遊戲時，建議啟動背景守護以確保警報 100% 準確播放：</span>
+        <!-- 手機背景執行守護者面板 -->
+        <section id="guardian-panel" class="bg-gradient-to-br from-emerald-800 to-teal-900 text-white rounded-2xl p-5 shadow-lg border border-emerald-700 mb-6">
+            <div class="flex items-center space-x-2.5 mb-2.5">
+                <span class="text-2xl">📱</span>
+                <h2 class="text-base font-bold">手機後台執行守護設定</h2>
             </div>
-            <div class="flex flex-wrap gap-2">
-                <!-- 啟動 PiP 按鈕 -->
-                <button id="btn-pip" onclick="togglePip()" class="bg-white hover:bg-stone-100 text-emerald-900 font-extrabold text-xs px-3.5 py-2 rounded-xl transition flex items-center space-x-1 shadow-md active:translate-y-0.5">
-                    <span id="pip-btn-icon">📺</span>
-                    <span id="pip-btn-text">啟動「手機浮動小視窗」</span>
-                </button>
-                <!-- 防止螢幕休眠按鈕 -->
-                <button id="btn-wakelock" onclick="toggleWakeLock()" class="bg-emerald-700/60 hover:bg-emerald-700/80 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition flex items-center space-x-1 border border-emerald-600">
-                    <span id="wake-btn-icon">💡</span>
-                    <span id="wake-btn-text">保持螢幕喚醒：未啟用</span>
-                </button>
+            <p class="text-xs text-emerald-100 leading-relaxed mb-4">
+                為防止切換回遊戲時瀏覽器休眠，Android 用戶建議啟用<strong>「手機浮動小視窗」</strong>；iPhone（iOS）用戶因系統不支援網頁畫布小視窗，請直接啟用下方<strong>「保持螢幕喚醒」</strong>，即可確保倒數與警報完美運作！
+            </p>
+            <div id="guardian-controls" class="flex flex-col gap-2.5">
+                <div class="flex flex-wrap gap-2.5">
+                    <!-- 啟動 PiP 按鈕 -->
+                    <button id="btn-pip" onclick="togglePip()" class="bg-white hover:bg-stone-100 text-emerald-900 font-extrabold text-xs px-4 py-2.5 rounded-xl transition flex items-center space-x-1.5 shadow-md active:translate-y-0.5">
+                        <span id="pip-btn-icon">📺</span>
+                        <span id="pip-btn-text">啟動「手機浮動小視窗」</span>
+                    </button>
+                    <!-- 防止螢幕休眠按鈕 -->
+                    <button id="btn-wakelock" onclick="toggleWakeLock()" class="bg-emerald-700/60 hover:bg-emerald-700/80 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition flex items-center space-x-1.5 border border-emerald-600">
+                        <span id="wake-btn-icon">💡</span>
+                        <span id="wake-btn-text">保持螢幕喚醒：未啟用</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 實體畫布與視訊渲染預覽區 (避免隱藏導致手機瀏覽器不渲染 Canvas 視訊流) -->
+            <div id="pip-preview-container" class="mt-4 bg-stone-950 p-3 rounded-xl border border-stone-850/80 flex flex-col items-center">
+                <div class="text-[10px] text-stone-400 font-bold mb-1.5 self-start flex items-center">
+                    <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-1.5"></span>
+                    浮動視窗預覽螢幕 (手機防背景休眠)
+                </div>
+                <canvas id="pip-canvas" width="300" height="200" class="w-full max-w-[280px] rounded-lg border border-stone-850 shadow-inner bg-black"></canvas>
+                <video id="pip-video" autoplay playsinline muted class="w-1 h-1 opacity-0 pointer-events-none absolute"></video>
             </div>
         </section>
-
-        <!-- 微米級無視覺定位容器 (避免手機瀏覽器不渲染 Canvas 視訊流) -->
-        <div style="position: fixed; width: 10px; height: 10px; bottom: 10px; right: 10px; opacity: 0.001; pointer-events: none; z-index: -9999; overflow: hidden;">
-            <canvas id="pip-canvas" width="300" height="240"></canvas>
-            <video id="pip-video" autoplay playsinline muted></video>
-        </div>
 
         <!-- 計算表格主結構 -->
         <main class="bg-white rounded-2xl shadow-sm border border-stone-200/60 overflow-hidden">
             
-            <!-- 表格標題列 (PC版顯示，手機版隱藏) -->
+            <!-- 表格標題列 (桌機版) -->
             <div class="hidden md:grid grid-cols-12 gap-4 bg-stone-100 p-4 font-bold text-stone-600 text-sm border-b border-stone-200">
                 <div class="col-span-3">📍 地點名稱 (手動)</div>
                 <div class="col-span-3 text-center">🕒 基準對時 (自動)</div>
@@ -104,12 +110,12 @@
                 <div class="col-span-2 text-center">⚙️ 操作</div>
             </div>
 
-            <!-- 動態生成列容器 -->
-            <div id="rows-container" class="divide-y divide-stone-100">
+            <!-- 動態生成列容器 (支援桌機表格與手機極簡卡片) -->
+            <div id="rows-container" class="divide-y divide-stone-100 p-3 md:p-0">
                 <!-- 由 JavaScript 動態生成多個輸入槽 -->
             </div>
 
-            <div class="p-4 bg-stone-50 border-t border-stone-100 flex flex-wrap justify-between items-center gap-2">
+            <div class="p-4 bg-stone-50 border-t border-stone-100 flex justify-between items-center gap-2">
                 <button onclick="addNewRow()" class="text-sm bg-emerald-600 hover:bg-emerald-700 active:translate-y-0.5 text-white font-bold py-2 px-4 rounded-xl shadow-sm transition flex items-center space-x-1.5">
                     <span>➕ 新增一列</span>
                 </button>
@@ -132,38 +138,18 @@
 
     </div>
 
-    <!-- 說明指南 滿版彈出視窗 (Modal) -->
-    <div id="help-modal" class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-all duration-300">
-        <div class="bg-white w-full max-w-lg rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-[85vh]">
-            <div class="p-5 border-b border-stone-100 flex justify-between items-center bg-stone-50">
-                <h3 class="font-bold text-stone-800 flex items-center space-x-1.5">
-                    <span>📖</span>
-                    <span>皮克敏計算器使用指南</span>
-                </h3>
-                <button onclick="closeHelpModal()" class="text-stone-400 hover:text-stone-600 font-bold text-xl p-1">&times;</button>
-            </div>
-            <div class="p-6 overflow-y-auto space-y-4 text-sm text-stone-600 leading-relaxed">
-                <h4 class="font-bold text-emerald-800 text-base">🍄 蘑菇重生原理</h4>
-                <p>皮克敏 Bloom 中的蘑菇被擊破打倒後，固定會於 <strong>5 分鐘後</strong> 在原位重新刷出一顆新蘑菇。本計算器旨在協助您精準對時與鎖定這段冷卻時間。</p>
-                
-                <h4 class="font-bold text-emerald-800 text-base">📱 手機防休眠機制（守護者）</h4>
-                <p>iOS 與 Android 系統在您切換回遊戲時，會強迫背景瀏覽器休眠，導致倒數計時暫停、音效不響。我們提供了以下兩種絕佳解法：</p>
-                <ul class="list-disc pl-5 space-y-2">
-                    <li><strong>📺 手機浮動小視窗（Android / 電腦端 100% 成功）</strong>：螢幕上會出現一個小小的倒數畫面，不僅能隨時監控，更強迫系統判定網頁「正在播放視訊」而不休眠，讓警報音效 100% 準確響起！</li>
-                    <li><strong>💡 保持螢幕喚醒（iOS Safari / 雙手機用戶推薦）</strong>：鎖定螢幕常亮防止休眠，將手機放於身旁，20秒前警報與重生提示音精準響起。</li>
-                </ul>
-
-                <h4 class="font-bold text-emerald-800 text-base">📲 如何將它做成手機 App？</h4>
-                <p>本計算器已完整內建 PWA 規格設定。用手機瀏覽器打開您的 Vercel 網址：</p>
-                <ul class="list-disc pl-5 space-y-1">
-                    <li><strong>iPhone (Safari)</strong>：點擊分享按鈕 ➡️ 選擇「加入主畫面」即可。</li>
-                    <li><strong>Android (Chrome)</strong>：點擊三點選單 ➡️ 選擇「安裝應用程式」或「新增至主畫面」。</li>
-                </ul>
-            </div>
-            <div class="p-4 border-t border-stone-100 bg-stone-50 flex justify-end">
-                <button onclick="closeHelpModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2 px-5 rounded-xl transition">
-                    我知道了
-                </button>
+    <!-- 📖 說明指南彈出視窗 (Modal) -->
+    <div id="guide-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl relative">
+            <button onclick="toggleGuideModal()" class="absolute top-4 right-4 text-stone-400 hover:text-stone-600 text-xl font-bold">✕</button>
+            <h3 class="text-lg font-bold text-stone-800 mb-4 flex items-center"><span class="mr-2">🍄</span> 重生計算器使用指南</h3>
+            <div class="text-xs text-stone-600 space-y-4 leading-relaxed">
+                <p><strong>1. 自動基準對時：</strong> 在尚未點擊「開始」前，基準時間會每秒同步當前時間。點擊「開始」時會自動鎖定該秒作為出發基準，不用手動填寫！</p>
+                <p><strong>2. 剩餘時間手動輸入：</strong> 格式高度自由，您可以直接輸入 <code>24:35</code>、<code>24分35秒</code> 甚至是純數字 <code>24</code>（系統會自動判定為 24 分鐘）。</p>
+                <p><strong>3. 保持背景執行（重要）：</strong> 手機系統為省電會強制休眠後台。建議：
+                    <br>• <strong>Android：</strong> 點擊「啟動手機浮動小視窗」，產生懸浮窗後即可安心切回皮克敏遊戲。
+                    <br>• <strong>iPhone (iOS)：</strong> 開啟「保持螢幕喚醒」，在重生前幾分鐘保持計算器畫面常亮，即可 100% 準確播放警報。
+                </p>
             </div>
         </div>
     </div>
@@ -184,7 +170,7 @@
         let wakeLock = null;
         let audioCtx = null;
 
-        // 喚醒並初始化共享的音訊上下文，解決移動設備靜音防護
+        // 喚醒並初始化共享的音訊上下文
         function getAudioContext() {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -195,8 +181,25 @@
             return audioCtx;
         }
 
-        // PWA 動態 Manifest 與 Service Worker 註冊器
         window.onload = function() {
+            // iOS 智慧相容化優化：如果偵測到是 iPhone (iOS)，自動隱藏 PiP 浮動視窗按鈕並優化版面
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            if (isIOS) {
+                const pipBtn = document.getElementById('btn-pip');
+                const pipPreview = document.getElementById('pip-preview-container');
+                if (pipBtn) pipBtn.style.display = 'none';
+                if (pipPreview) pipPreview.style.display = 'none';
+                
+                const wakeBtn = document.getElementById('btn-wakelock');
+                if (wakeBtn) {
+                    wakeBtn.classList.add('w-full', 'justify-center', 'py-3', 'text-sm');
+                    const iosTip = document.createElement('p');
+                    iosTip.className = "text-[11px] text-emerald-100/90 mt-2 text-center leading-relaxed font-medium";
+                    iosTip.innerText = "🍎 提示：iOS 限制網頁浮動小視窗。請開啟「保持螢幕喚醒」，防休眠效果完全相同！";
+                    wakeBtn.parentNode.appendChild(iosTip);
+                }
+            }
+
             // 載入 LocalStorage
             const stored = localStorage.getItem('pikmin_simple_slots');
             if (stored) {
@@ -214,7 +217,7 @@
                 }
             }
 
-            // 檢查並自動注入使用者要求的兩個手動計時項目 (公園涼亭 09:44:25, 龍湖廟 09:42:36)
+            // 自動注入兩個要求的手動計時項目 (公園涼亭 09:44:25, 龍湖廟 09:42:36)
             const hasPavilion = slots.some(s => s.location === '公園涼亭');
             const hasLonghu = slots.some(s => s.location === '龍湖廟');
             const today = new Date();
@@ -262,19 +265,15 @@
 
             setInterval(updateLoop, 1000);
             updateLoop();
-
-            // 監聽子母畫面關閉事件
-            const video = document.getElementById('pip-video');
-            video.addEventListener('leavepictureinpicture', () => {
-                document.getElementById('pip-btn-text').innerText = '啟動「手機浮動小視窗」';
-                document.getElementById('pip-btn-icon').innerText = '📺';
-                if (pipInterval) {
-                    clearInterval(pipInterval);
-                    pipInterval = null;
-                }
-                showToast("⏹️ 浮動視窗已關閉");
-            });
         };
+
+        // 開啟/關閉說明彈窗
+        function toggleGuideModal() {
+            const modal = document.getElementById('guide-modal');
+            if (modal) {
+                modal.classList.toggle('hidden');
+            }
+        }
 
         // 產生新欄位資料物件
         function createEmptySlotObject() {
@@ -368,7 +367,7 @@
         }
 
         function toggleLock(id) {
-            getAudioContext(); // 互動解鎖音效限制
+            getAudioContext(); // 解鎖手機音訊限制
             const slot = slots.find(s => s.id === id);
             if (!slot) return;
 
@@ -460,7 +459,7 @@
                     osc.stop(now + delay + 0.18);
                 });
             } catch (e) {
-                console.warn("音效播放失敗：需要使用者點擊過網頁以授權。");
+                console.warn("音效播放失敗：", e);
             }
         }
 
@@ -500,12 +499,12 @@
                     osc2.stop(now + delay + 0.35);
                 });
             } catch (e) {
-                console.warn("音效播放失敗：需要使用者點擊過網頁以授權。");
+                console.warn("音效播放失敗：", e);
             }
         }
 
         function testSounds() {
-            getAudioContext(); // 互動解鎖音效限制
+            getAudioContext();
             showToast("🔊 測試：20 秒前預警音效...", "warning");
             playWarningSound();
             
@@ -515,14 +514,33 @@
             }, 1200);
         }
 
-        function openHelpModal() {
-            const modal = document.getElementById('help-modal');
-            modal.classList.remove('opacity-0', 'pointer-events-none');
-        }
+        // 彈出通知 (Toast) 的實作函數
+        function showToast(msg, type = "success") {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            const toastIcon = document.getElementById('toast-icon');
 
-        function closeHelpModal() {
-            const modal = document.getElementById('help-modal');
-            modal.classList.add('opacity-0', 'pointer-events-none');
+            if (!toast || !toastMsg || !toastIcon) return;
+
+            toastMsg.innerText = msg;
+            if (type === "warning") {
+                toastIcon.innerText = "⏳";
+                toast.className = "fixed bottom-6 left-1/2 -translate-x-1/2 bg-amber-800 text-white text-xs px-4 py-3 rounded-full shadow-lg opacity-100 transition-all duration-300 z-50 flex items-center space-x-1.5";
+            } else if (type === "respawn") {
+                toastIcon.innerText = "🌱";
+                toast.className = "fixed bottom-6 left-1/2 -translate-x-1/2 bg-emerald-800 text-white text-xs px-4 py-3 rounded-full shadow-lg opacity-100 transition-all duration-300 z-50 flex items-center space-x-1.5";
+            } else {
+                toastIcon.innerText = "✨";
+                toast.className = "fixed bottom-6 left-1/2 -translate-x-1/2 bg-stone-900 text-white text-xs px-4 py-3 rounded-full shadow-lg opacity-100 transition-all duration-300 z-50 flex items-center space-x-1.5";
+            }
+
+            // 確保每次呼叫都強制重置顯示狀態
+            toast.classList.remove('opacity-0', 'pointer-events-none');
+
+            // 2.5 秒後自動隱藏
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2500);
         }
 
         // 📱 核心功能：在背景產生完全靜音的音軌，防止 iOS/Android 背景自動暫停子母畫面
@@ -545,7 +563,7 @@
         }
 
         async function togglePip() {
-            getAudioContext(); // 互動解鎖音效限制
+            getAudioContext();
             const video = document.getElementById('pip-video');
             const canvas = document.getElementById('pip-canvas');
             
@@ -852,87 +870,81 @@
                     rowBgClass = 'bg-emerald-50/20';
                 }
 
+                // 核心排版重構：手機版徹底消滅所有贅字標籤，實現極簡卡片化
                 html += `
                 <!-- 行槽 (${s.id}) -->
                 <div id="row-${s.id}" class="flex flex-col md:grid md:grid-cols-12 gap-3 md:gap-4 p-4 items-stretch md:items-center transition-all duration-200 ${rowBgClass}">
                     
-                    <!-- 1. 地點手動輸入 -->
-                    <div class="md:col-span-3">
+                    <!-- 1. 地點欄：佔滿整行 (手機與PC一致) -->
+                    <div class="col-span-1 md:col-span-3 flex items-center">
                         <input type="text" 
                                value="${s.location}" 
-                               placeholder="📍 輸入地點 (例如: 捷運站)" 
+                               placeholder="輸入地點 (例如: 捷運站)" 
                                oninput="handleInputChange('${s.id}', 'location', this.value)"
                                ${s.isLocked ? 'disabled' : ''}
                                class="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition text-sm disabled:opacity-75 disabled:bg-stone-100 font-medium">
                     </div>
 
-                    <!-- 手機端專屬：三等分微型資訊網格 (在 PC 版展開為 contents) -->
-                    <div class="grid grid-cols-3 gap-2 items-center md:contents">
+                    <!-- 手機版微型格：將基準時間、剩餘時間、預計重生時間整併成一列 3 欄，完全移除中文重複標籤 -->
+                    <div class="grid grid-cols-3 gap-2 md:contents">
                         
-                        <!-- 2. 基準對時 (自動) -->
-                        <div class="flex flex-col md:block md:col-span-3 text-center bg-stone-50 md:bg-transparent p-2 md:p-0 rounded-xl border border-stone-100 md:border-0">
-                            <span class="md:hidden text-[9px] text-stone-400 font-black block mb-0.5">🕒 基準</span>
+                        <!-- 2. 基準時間 -->
+                        <div class="bg-stone-50/80 md:bg-transparent p-2 md:p-0 rounded-xl border border-stone-100 md:border-0 flex flex-col md:flex-row items-center justify-center md:col-span-3">
+                            <span class="md:hidden text-[9px] text-stone-400 font-bold mb-0.5">🕒 基準</span>
                             <span id="base-time-${s.id}" class="font-mono text-xs md:text-sm font-bold text-emerald-600">
                                 ${baseTimeStr}
                             </span>
                         </div>
 
-                        <!-- 3. 剩餘打倒時間 (手動) -->
-                        <div class="flex flex-col md:block md:col-span-2 text-center bg-stone-50 md:bg-transparent p-1.5 md:p-0 rounded-xl border border-stone-100 md:border-0">
-                            <span class="md:hidden text-[9px] text-stone-400 font-black block mb-1">⏳ 剩餘</span>
+                        <!-- 3. 剩餘時間 -->
+                        <div class="flex flex-col justify-center items-center bg-stone-50 md:bg-transparent p-1.5 md:p-0 rounded-xl border border-stone-200/40 md:border-0 md:col-span-2">
+                            <span class="md:hidden text-[10px] text-stone-400 font-bold mb-0.5">⏳ 剩餘</span>
                             <input type="text" 
                                    value="${s.remainingTime}" 
-                                   placeholder="24:35" 
+                                   placeholder="24:35 或 24" 
                                    oninput="handleInputChange('${s.id}', 'remainingTime', this.value)"
                                    ${s.isLocked ? 'disabled' : ''}
-                                   class="w-full px-1 py-1 bg-white md:bg-stone-50 border border-stone-200 rounded-lg md:rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition text-xs md:text-sm text-center font-bold font-mono disabled:opacity-75 disabled:bg-stone-100">
+                                   class="w-full bg-transparent md:bg-stone-50 border-0 md:border md:border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition text-xs md:text-sm text-center font-bold font-mono disabled:opacity-75 disabled:bg-stone-100 p-0 md:py-2">
                         </div>
 
-                        <!-- 4. 預估重生時間 (動態計算) -->
-                        <div class="flex flex-col md:block md:col-span-2 text-center bg-emerald-50/20 md:bg-transparent p-2 md:p-0 rounded-xl border border-emerald-100/50 md:border-0">
-                            <span class="md:hidden text-[9px] text-emerald-700 font-black block mb-0.5">🌱 重生</span>
-                            <div class="text-center">
-                                <div id="respawn-time-${s.id}" class="font-mono text-xs md:text-base font-extrabold ${s.isLocked ? (isUrgent ? 'text-red-600' : 'text-emerald-700') : 'text-stone-700'}">
-                                    ${respawnTimeStr}
-                                </div>
-                                <div id="countdown-${s.id}" class="text-[9px] md:text-[10px] ${isUrgent ? 'text-red-500 font-bold' : 'text-stone-400'} font-medium mt-0.5">
-                                    ${countdownStr}
-                                </div>
+                        <!-- 4. 重生時間 -->
+                        <div class="bg-stone-50 md:bg-transparent p-1.5 rounded-xl border border-stone-200/60 md:border-0 flex flex-col justify-center items-center md:col-span-2">
+                            <span class="md:hidden text-[10px] text-stone-400 font-bold mb-0.5">🌱 重生</span>
+                            <div id="respawn-time-${s.id}" class="font-mono text-sm md:text-base font-extrabold ${s.isLocked ? (isUrgent ? 'text-red-600' : 'text-emerald-700') : 'text-stone-700'}">
+                                ${respawnTimeStr}
+                            </div>
+                            <div id="countdown-${s.id}" class="text-[9px] md:text-[10px] ${isUrgent ? 'text-red-500 font-bold' : 'text-stone-400'} font-medium">
+                                ${countdownStr}
                             </div>
                         </div>
 
                     </div>
 
-                    <!-- 5. 控制與複製按鈕 -->
-                    <div class="flex items-center justify-between md:justify-end gap-2 md:col-span-2 pt-2 md:pt-0 border-t border-dashed border-stone-100 md:border-t-0">
-                        <!-- 手機版左下角的小裝飾標籤 -->
-                        <span class="md:hidden text-[10px] text-stone-400 font-bold">⚙️ 操作選項</span>
+                    <!-- 5. 控制與複製按鈕列 -->
+                    <div class="col-span-1 md:col-span-2 flex items-center justify-end space-x-1 pt-2 md:pt-0 border-t border-dashed border-stone-100 md:border-t-0">
+                        <!-- 開始/解鎖 -->
+                        <button onclick="toggleLock('${s.id}')" 
+                                class="flex-1 md:flex-initial text-xs font-bold py-1.5 px-3 rounded-lg transition-colors ${
+                                    s.isLocked 
+                                    ? 'bg-amber-100 hover:bg-amber-200 text-amber-800' 
+                                    : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                                }">
+                            ${s.isLocked ? '解鎖' : '開始'}
+                        </button>
                         
-                        <div class="flex items-center gap-1">
-                            <!-- 開始/解鎖 -->
-                            <button onclick="toggleLock('${s.id}')" 
-                                    class="text-xs font-bold py-1.5 px-3 rounded-lg transition-colors ${
-                                        s.isLocked 
-                                        ? 'bg-amber-100 hover:bg-amber-200 text-amber-800' 
-                                        : 'bg-emerald-600 hover:bg-emerald-700 text-white'
-                                    }">
-                                ${s.isLocked ? '解鎖' : '開始'}
-                            </button>
-                            
-                            <!-- 複製 -->
-                            <button onclick="copySlotInfo('${s.id}')" 
-                                    title="複製分享文字" 
-                                    class="p-1.5 text-stone-400 hover:text-emerald-600 hover:bg-stone-100 rounded-lg transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
-                            </button>
+                        <!-- 複製 -->
+                        <button onclick="copySlotInfo('${s.id}')" 
+                                title="複製分享文字" 
+                                class="p-1.5 text-stone-400 hover:text-emerald-600 hover:bg-stone-100 rounded-lg transition-colors">
+                            <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                        </button>
 
-                            <!-- 刪除 -->
-                            <button onclick="deleteRow('${s.id}')" 
-                                    title="刪除此列" 
-                                    class="p-1.5 text-stone-400 hover:text-red-500 hover:bg-stone-100 rounded-lg transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                            </button>
-                        </div>
+                        <!-- 刪除 -->
+                        <button onclick="deleteRow('${s.id}')" 
+                                title="刪除此列" 
+                                class="p-1.5 text-stone-400 hover:text-red-500 hover:bg-stone-100 rounded-lg transition-colors">
+                            <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
                     </div>
 
                 </div>
