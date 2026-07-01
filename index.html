@@ -1,0 +1,1788 @@
+<!DOCTYPE html>
+<html lang="zh-TW"><head><script data-bard-injected="true">(function(firebaseConfig, initialAuthToken, appId) {
+        window.__firebase_config = firebaseConfig;
+        window.__initial_auth_token = initialAuthToken;
+        window.__app_id = appId;
+            })("\n{\n  \"apiKey\": \"AIzaSyCqyCcs2R2e7AegGjvFAwG98wlamtbHvZY\",\n  \"authDomain\": \"bard-frontend.firebaseapp.com\",\n  \"projectId\": \"bard-frontend\",\n  \"storageBucket\": \"bard-frontend.firebasestorage.app\",\n  \"messagingSenderId\": \"175205271074\",\n  \"appId\": \"1:175205271074:web:2b7bd4d34d33bf38e6ec7b\"\n}\n","eyJhbGciOiJSUzI1NiIsImtpZCI6IjBmNDhjMDQxMTUxMmM3NTM4NjJkMmFkZWVmYjg0NTczZTAyZmFlMjMiLCJ0eXAiOiJKV1QifQ.eyJzdWIiOiJmaXJlYmFzZS1hZG1pbnNkay1mYnN2Y0BiYXJkLWZyb250ZW5kLmlhbS5nc2VydmljZWFjY291bnQuY29tIiwiYXVkIjoiaHR0cHM6Ly9pZGVudGl0eXRvb2xraXQuZ29vZ2xlYXBpcy5jb20vZ29vZ2xlLmlkZW50aXR5LmlkZW50aXR5dG9vbGtpdC52MS5JZGVudGl0eVRvb2xraXQiLCJ1aWQiOiIxMjc2MzMxNjA3MzQ2Nzk0NjkwMiIsImlzcyI6ImZpcmViYXNlLWFkbWluc2RrLWZic3ZjQGJhcmQtZnJvbnRlbmQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCJjbGFpbXMiOnsiYXBwSWQiOiJmZDU4YTBjNjM3YTUtcGlrbWluX211c2hyb29tX2NhbGN1bGF0b3IuaHRtbC0yODEifSwiZXhwIjoxNzgyODc1MTIyLCJpYXQiOjE3ODI4NzE1MjIsImFsZyI6IlJTMjU2In0.T7VCvGfPW2EX4jkYPFoFN_tmEUQg2ymJcvqGOG-jg53sxr8SUUBEGvkTj8X3lXg6J-THpVtY6HskbcUovuxtJ1ib_SouvxTfySiWjntA5hSpjfpbrpdTIRmWCwYnGc-RIhHZ-FmfNMl_SMsPQRQtBz802Vo2tdP1juaY7PiWGLxBIAySGqxV06h4REC8zookd5MhP_2ShJSP0ysxV-1NIKScyyCW45g8AY5pBqVtq_15IgTG0c0EnLDnYbMWFj9F-2mZmjE9BdpX6EKtkMmrrAPLEr6suvao4lDjQ_iYEQ10DyejRjnXXhmGpuL9COEj41wsGibxm_ERq2SVAoFXOg","fd58a0c637a5-pikmin_mushroom_calculator.html-281")</script><script data-bard-injected="true">(function() {
+  document.addEventListener('mouseup', function(e) {
+    const selection = window.getSelection();
+    const selectedText = selection ? selection.toString().trim() : '';
+    if (selectedText.length > 0) {
+      const range = selection.getRangeAt(0);
+      // Clone the original user selection range before DOM manipulation. In browser DOM mechanics,
+      // removing temporary nodes from within an active selection invalidates and collapses the selection pointers.
+      const originalRange = range.cloneRange();
+      const rect = range.getBoundingClientRect();
+
+      const startTag = document.createTextNode('<selection-tag>');
+      const endTag = document.createTextNode('</selection-tag>');
+
+      const rangeStart = range.cloneRange();
+      rangeStart.collapse(true);
+
+      const rangeEnd = range.cloneRange();
+      rangeEnd.collapse(false);
+
+      // Insert end tag first to avoid shifting start boundary if they are in the same node.
+      rangeEnd.insertNode(endTag);
+      rangeStart.insertNode(startTag);
+
+      const fullTextWithTags = document.body.innerText;
+
+      if (startTag.parentNode) {
+        startTag.parentNode.removeChild(startTag);
+      }
+      if (endTag.parentNode) {
+        endTag.parentNode.removeChild(endTag);
+      }
+
+      // Explicitly restore the user's original selection range. Without this restoration, the selection collapses
+      // instantly, causing subsequent mouse movements or clicks to evaluate window.getSelection() as empty,
+      // which triggers a premature textSelectionCleared post-message that wipes out artifactTextWithTags in the store.
+      selection.removeAllRanges();
+      selection.addRange(originalRange);
+
+      window.parent.postMessage({
+        type: 'textSelection',
+        text: selectedText,
+        fullTextWithTags: fullTextWithTags,
+        rect: {
+          top: rect.top,
+          left: rect.left,
+          bottom: rect.bottom,
+          right: rect.right,
+          width: rect.width,
+          height: rect.height,
+        },
+      }, '*');
+    } else {
+      window.parent.postMessage({
+        type: 'textSelectionCleared',
+      }, '*');
+    }
+  }, true);
+})();</script><script data-bard-injected="true">(function(){'use strict';window.addEventListener("message",a=>{a.data&&a.data.type==="SUPPLEMENTAL_DATA_UPDATE"&&window.dispatchEvent(new CustomEvent("supplementaldataupdate",{detail:a.data.data}))});}).call(this);
+</script><script data-bard-injected="true">(function(){'use strict';var h=typeof Object.defineProperties=="function"?Object.defineProperty:function(a,b,d){if(a==Array.prototype||a==Object.prototype)return a;a[b]=d.value;return a};function l(a){a=["object"==typeof globalThis&&globalThis,a,"object"==typeof window&&window,"object"==typeof self&&self,"object"==typeof global&&global];for(var b=0;b<a.length;++b){var d=a[b];if(d&&d.Math==Math)return d}throw Error("Cannot find global object");}var n=l(this);
+function p(a,b){if(b)a:{var d=n;a=a.split(".");for(var c=0;c<a.length-1;c++){var e=a[c];if(!(e in d))break a;d=d[e]}a=a[a.length-1];c=d[a];b=b(c);b!=c&&b!=null&&h(d,a,{configurable:!0,writable:!0,value:b})}}function r(a){function b(c){return a.next(c)}function d(c){return a.throw(c)}return new Promise(function(c,e){function f(g){g.done?c(g.value):Promise.resolve(g.value).then(b,d).then(f,e)}f(a.next())})}function t(a){return r(a())}
+p("Object.values",function(a){return a?a:function(b){var d=[],c;for(c in b)Object.prototype.hasOwnProperty.call(b,c)&&d.push(b[c]);return d}});p("Array.prototype.includes",function(a){return a?a:function(b,d){var c=this;c instanceof String&&(c=String(c));var e=c.length;d=d||0;for(d<0&&(d=Math.max(d+e,0));d<e;d++){var f=c[d];if(f===b||Object.is(f,b))return!0}return!1}});/*
+
+ MIT License
+
+ Copyright (c) 2017-2023 W.Y.
+
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+
+*/
+function u(a,b){var d=a.style;b.backgroundColor&&(d.backgroundColor=b.backgroundColor);b.width&&(d.width=`${b.width}px`);b.height&&(d.height=`${b.height}px`);var c=b.style;c!=null&&Object.keys(c).forEach(e=>{d[e]=c[e]})};var v=(()=>{var a=0;return()=>{a+=1;return`u${`0000${(Math.random()*1679616<<0).toString(36)}`.slice(-4)}${a}`}})();function w(a){var b=[];for(let d=0,c=a.length;d<c;d++)b.push(a[d]);return b}let x=null;function y(a={}){return x?x:a.l?x=a.l:x=w(window.getComputedStyle(document.documentElement))}function z(a,b){return(a=(a.ownerDocument.defaultView||window).getComputedStyle(a).getPropertyValue(b))?parseFloat(a.replace("px","")):0}
+function A(a,b={}){var d;if(!(d=b.width)){d=z(a,"border-left-width");var c=z(a,"border-right-width");d=a.clientWidth+d+c}(b=b.height)||(b=z(a,"border-top-width"),c=z(a,"border-bottom-width"),b=a.clientHeight+b+c);return{width:d,height:b}}function B(a){return new Promise((b,d)=>{var c=new Image;c.onload=()=>{c.decode().then(()=>{requestAnimationFrame(()=>b(c))})};c.onerror=d;c.crossOrigin="anonymous";c.decoding="async";c.src=a})}
+function C(a){return t(function*(){return Promise.resolve().then(()=>(new XMLSerializer).serializeToString(a)).then(encodeURIComponent).then(b=>`data:image/svg+xml;charset=utf-8,${b}`)})}
+function D(a,b,d){return t(function*(){var c=document.createElementNS("http://www.w3.org/2000/svg","svg"),e=document.createElementNS("http://www.w3.org/2000/svg","foreignObject");c.setAttribute("width",`${b}`);c.setAttribute("height",`${d}`);c.setAttribute("viewBox",`0 0 ${b} ${d}`);e.setAttribute("width","100%");e.setAttribute("height","100%");e.setAttribute("x","0");e.setAttribute("y","0");e.setAttribute("externalResourcesRequired","true");c.appendChild(e);e.appendChild(a);return C(c)})}
+var E=(a,b)=>{if(a instanceof b)return!0;a=Object.getPrototypeOf(a);return a===null?!1:a.constructor.name===b.name||E(a,b)};function F(a,b){return y(b).map(d=>{var c=a.getPropertyValue(d),e=a.getPropertyPriority(d);return`${d}: ${c}${e?" !important":""};`}).join(" ")}
+function G(a,b,d,c){a=window.getComputedStyle(a,d);var e=a.getPropertyValue("content");if(e!==""&&e!=="none"){var f=v();try{b.className=`${b.className} ${f}`}catch(k){return}e=document.createElement("style");var g=e.appendChild;d=`.${f}:${d}`;a.cssText?(c=a.getPropertyValue("content"),c=`${a.cssText} content: '${c.replace(/'|"/g,"")}';`):c=F(a,c);g.call(e,document.createTextNode(`${d}{${c}}`));b.appendChild(e)}};function H(a){return a.search(/^(data:)/)!==-1}function I(a,b,d){return t(function*(){var c=yield fetch(a,b);if(c.status===404)throw Error(`Resource "${c.url}" not found`);var e=yield c.blob();return new Promise((f,g)=>{var k=new FileReader;k.onerror=g;k.onloadend=()=>{try{f(d({o:c,result:k.result}))}catch(m){g(m)}};k.readAsDataURL(e)})})}const J={};function K(a,b,d){var c=a.replace(/\?.*/,"");d&&(c=a);/ttf|otf|eot|woff2?/i.test(c)&&(c=c.replace(/.*\//,""));return b?`[${b}]${c}`:c}
+function L(a,b,d){return t(function*(){var c=K(a,b,d.C);if(J[c]!=null)return J[c];d.u&&(a+=(/\?/.test(a)?"&":"?")+(new Date).getTime());try{let f=yield I(a,d.i,({o:g,result:k})=>{b||(b=g.headers.get("Content-Type")||"");return k.split(/,/)[1]});var e=`data:${b};base64,${f}`}catch(f){e=d.B||""}return J[c]=e})};const M={P:"application/font-woff",R:"application/font-woff",N:"application/font-truetype",v:"application/vnd.ms-fontobject",H:"image/png",F:"image/jpeg",D:"image/jpeg",A:"image/gif",M:"image/tiff",L:"image/svg+xml",O:"image/webp"};function N(a){return(a=/\.([^./]*?)$/g.exec(a))?a[1]:""};function O(a){return t(function*(){var b=a.toDataURL();return b==="data:,"?a.cloneNode(!1):B(b)})}function aa(a,b){return t(function*(){if(a.currentSrc){var d=document.createElement("canvas");let c=d.getContext("2d");d.width=a.clientWidth;d.height=a.clientHeight;c==null||c.drawImage(a,0,0,d.width,d.height);d=d.toDataURL();return B(d)}d=a.poster;d=yield L(d,M[N(d).toLowerCase()]||"",b);return B(d)})}
+function ba(a,b){return t(function*(){try{let d;if(a==null?0:(d=a.contentDocument)==null?0:d.body)return yield P(a.contentDocument.body,b,!0)}catch(d){}return a.cloneNode(!1)})}function ca(a,b){return t(function*(){return E(a,HTMLCanvasElement)?O(a):E(a,HTMLVideoElement)?aa(a,b):E(a,HTMLIFrameElement)?ba(a,b):a.cloneNode(a.tagName!=null&&a.tagName.toUpperCase()==="SVG")})}
+function da(a,b,d){return t(function*(){if(b.tagName!=null&&b.tagName.toUpperCase()==="SVG")return b;var c=[];if(a.tagName!=null&&a.tagName.toUpperCase()==="SLOT"&&a.assignedNodes)c=w(a.assignedNodes());else{let e;if(E(a,HTMLIFrameElement)&&((e=a.contentDocument)==null?0:e.body))c=w(a.contentDocument.body.childNodes);else{let f;c=w(((f=a.shadowRoot)!=null?f:a).childNodes)}}if(c.length===0||E(a,HTMLVideoElement))return b;yield c.reduce((e,f)=>e.then(()=>P(f,d)).then(g=>{g&&b.appendChild(g)}),Promise.resolve());
+return b})}function ea(a,b,d){var c=b.style;if(c){var e=window.getComputedStyle(a);e.cssText?(c.cssText=e.cssText,c.transformOrigin=e.transformOrigin):y(d).forEach(f=>{var g=e.getPropertyValue(f);f==="font-size"&&g.endsWith("px")&&(g=`${Math.floor(parseFloat(g.substring(0,g.length-2)))-.1}px`);E(a,HTMLIFrameElement)&&f==="display"&&g==="inline"&&(g="block");f==="d"&&b.getAttribute("d")&&(g=`path(${b.getAttribute("d")})`);c.setProperty(f,g,e.getPropertyPriority(f))})}}
+function fa(a,b){E(a,HTMLSelectElement)&&(b=Array.from(b.children).find(d=>a.value===d.getAttribute("value")))&&b.setAttribute("selected","")}
+function ha(a,b){return t(function*(){var d=a.querySelectorAll?a.querySelectorAll("use"):[];if(d.length===0)return a;var c={};for(var e=0;e<d.length;e++){var f=d[e].getAttribute("xlink:href");if(f){let g=document.querySelector(f);a.querySelector(f)||!g||c[f]||(c[f]=yield P(g,b,!0))}}d=Object.values(c);if(d.length){c=document.createElementNS("http://www.w3.org/1999/xhtml","svg");c.setAttribute("xmlns","http://www.w3.org/1999/xhtml");c.style.position="absolute";c.style.width="0";c.style.height="0";
+c.style.overflow="hidden";c.style.display="none";e=document.createElementNS("http://www.w3.org/1999/xhtml","defs");c.appendChild(e);for(f=0;f<d.length;f++)e.appendChild(d[f]);a.appendChild(c)}return a})}
+function P(a,b,d){return t(function*(){return d||!b.filter||b.filter(a)?Promise.resolve(a).then(c=>ca(c,b)).then(c=>da(a,c,b)).then(c=>{E(c,Element)&&(ea(a,c,b),G(a,c,":before",b),G(a,c,":after",b),E(a,HTMLTextAreaElement)&&(c.textContent=a.value),E(a,HTMLInputElement)&&c.setAttribute("value",a.value),fa(a,c));return c}).then(c=>ha(c,b)):null})};const Q=/url\((['"]?)([^'"]+?)\1\)/g,ia=/url\([^)]+\)\s*format\((["']?)([^"']+)\1\)/g,ja=/src:\s*(?:url\([^)]+\)\s*format\([^)]+\)[,;]\s*)+/g;function ka(a){var b=[];a.replace(Q,(d,c,e)=>{b.push(e);return d});return b.filter(d=>!H(d))}
+function la(a,b,d,c){return t(function*(){try{let e=d?(new URL(b,d||void 0)).toString():b,f;f=yield L(e,M[N(b).toLowerCase()]||"",c);return a.replace(new RegExp(`(url\\(['"]?)(${b.replace(/([.*+?^${}()|\[\]\/\\])/g,"\\$1")})(['"]?\\))`,"g"),`$1${f}$3`)}catch(e){}return a})}function ma(a,{I:b}){return b?a.replace(ja,d=>{for(;;){let [c,,e]=ia.exec(d)||[];if(!e)return"";if(e===b)return`src: ${c};`}}):a}
+function R(a,b,d){return t(function*(){if(a.search(Q)===-1)return a;var c=ma(a,d);return ka(c).reduce((e,f)=>e.then(g=>la(g,f,b,d)),Promise.resolve(c))})};function S(a,b,d){return t(function*(){var c,e=(c=b.style)==null?void 0:c.getPropertyValue(a);return e?(c=yield R(e,null,d),b.style.setProperty(a,c,b.style.getPropertyPriority(a)),!0):!1})}function na(a,b){return t(function*(){(yield S("background",a,b))||(yield S("background-image",a,b));(yield S("mask",a,b))||(yield S("-webkit-mask",a,b))||(yield S("mask-image",a,b))||(yield S("-webkit-mask-image",a,b))})}
+function oa(a,b){return t(function*(){var d=E(a,HTMLImageElement);if(d&&!H(a.src)||E(a,SVGImageElement)&&!H(a.href.baseVal)){var c=d?a.src:a.href.baseVal,e=yield L(c,M[N(c).toLowerCase()]||"",b);yield new Promise((f,g)=>{a.onload=f;a.onerror=b.m?(...k)=>{try{f(b.m(...k))}catch(m){g(m)}}:g;a.decode&&(a.decode=f);a.loading==="lazy"&&(a.loading="eager");d?(a.srcset="",a.src=e):a.href.baseVal=e})}})}
+function pa(a,b){return t(function*(){var d=w(a.childNodes).map(c=>T(c,b));yield Promise.all(d).then(()=>a)})}function T(a,b){return t(function*(){E(a,Element)&&(yield na(a,b),yield oa(a,b),yield pa(a,b))})};const U={};function V(a){return t(function*(){var b=U[a];if(b!=null)return b;b=yield(yield fetch(a)).text();b={url:a,cssText:b};return U[a]=b})}function W(a,b){return t(function*(){var d=a.cssText,c=/url\(["']?([^"')]+)["']?\)/g,e=(d.match(/url\([^)]+\)/g)||[]).map(f=>t(function*(){var g=f.replace(c,"$1");g.startsWith("https://")||(g=(new URL(g,a.url)).href);return I(g,b.i,({result:k})=>{d=d.replace(f,`url(${k})`);return[f,k]})}));return Promise.all(e).then(()=>d)})}
+function X(a){if(a==null)return[];var b=[];a=a.replace(/(\/\*[\s\S]*?\*\/)/gi,"");for(var d=RegExp("((@.*?keyframes [\\s\\S]*?){([\\s\\S]*?}\\s*?)})","gi");;){var c=d.exec(a);if(c===null)break;b.push(c[0])}a=a.replace(d,"");d=/@import[\s\S]*?url\([^)]*\)[\s\S]*?;/gi;for(c=RegExp("((\\s*?(?:\\/\\*[\\s\\S]*?\\*\\/)?\\s*?@media[\\s\\S]*?){([\\s\\S]*?)}\\s*?})|(([\\s\\S]*?){([\\s\\S]*?)})","gi");;){let e=d.exec(a);if(e===null)if(e=c.exec(a),e===null)break;else d.lastIndex=c.lastIndex;else c.lastIndex=
+d.lastIndex;b.push(e[0])}return b}
+function qa(a,b){return t(function*(){var d=[],c=[];a.forEach(e=>{if("cssRules"in e)try{w(e.cssRules||[]).forEach((f,g)=>{if(f.type===CSSRule.IMPORT_RULE){let k=g+1;f=V(f.href).then(m=>W(m,b)).then(m=>X(m).forEach(q=>{try{e.insertRule(q,q.startsWith("@import")?k+=1:e.cssRules.length)}catch(Da){}})).catch(()=>{});c.push(f)}})}catch(f){let g=a.find(k=>k.href==null)||document.styleSheets[0];e.href!=null&&c.push(V(e.href).then(k=>W(k,b)).then(k=>X(k).forEach(m=>{g.insertRule(m,g.cssRules.length)})).catch(()=>
+{}))}});return Promise.all(c).then(()=>{a.forEach(e=>{if("cssRules"in e)try{w(e.cssRules||[]).forEach(f=>{d.push(f)})}catch(f){}});return d})})}function ra(a){return a.filter(b=>b.type===CSSRule.FONT_FACE_RULE).filter(b=>b.style.getPropertyValue("src").search(Q)!==-1)}function sa(a,b){return t(function*(){if(a.ownerDocument==null)throw Error("Provided element is not within a Document");var d=w(a.ownerDocument.styleSheets);d=yield qa(d,b);return ra(d)})}
+function ta(a){function b(c){(c.style.fontFamily||getComputedStyle(c).fontFamily).split(",").forEach(e=>{d.add(e.trim().replace(/["']/g,""))});Array.from(c.children).forEach(e=>{e instanceof HTMLElement&&b(e)})}var d=new Set;b(a);return d}function ua(a,b){return t(function*(){var d=yield sa(a,b),c=ta(a);return(yield Promise.all(d.filter(e=>c.has(e.style.fontFamily.trim().replace(/["']/g,""))).map(e=>R(e.cssText,e.parentStyleSheet?e.parentStyleSheet.href:null,b)))).join("\n")})}
+function va(a,b){return t(function*(){var d=b.j!=null?b.j:b.K?null:yield ua(a,b);if(d){let c=document.createElement("style");c.appendChild(document.createTextNode(d));a.firstChild?a.insertBefore(c,a.firstChild):a.appendChild(c)}})};function wa(a,b={}){return t(function*(){var {width:d,height:c}=A(a,b),e=yield P(a,b,!0);yield va(e,b);yield T(e,b);u(e,b);return yield D(e,d,c)})}
+function xa(a,b={}){return t(function*(){var {width:d,height:c}=A(a,b),e=yield wa(a,b);e=yield B(e);var f=document.createElement("canvas"),g=f.getContext("2d"),k=b.G||window.devicePixelRatio||1,m=b.h||d,q=b.g||c;f.width=m*k;f.height=q*k;!b.J&&(f.width>16384||f.height>16384)&&(f.width>16384&&f.height>16384?f.width>f.height?(f.height*=16384/f.width,f.width=16384):(f.width*=16384/f.height,f.height=16384):f.width>16384?(f.height*=16384/f.width,f.width=16384):(f.width*=16384/f.height,f.height=16384));
+f.style.width=`${m}`;f.style.height=`${q}`;b.backgroundColor&&(g.fillStyle=b.backgroundColor,g.fillRect(0,0,f.width,f.height));g.drawImage(e,0,0,f.width,f.height);return f})}function ya(a,b={}){return t(function*(){return(yield xa(a,b)).toDataURL()})};const za=["gemini.google.com","corp.google.com","proxy.googlers.com"];function Y(){return document.body.querySelectorAll('[class*="animate"]').length>0}function Z(a){return t(function*(){try{return yield ya(a,{h:a.offsetWidth,g:a.offsetHeight})}catch(d){var b=a.offsetHeight;let c=document.createElement("canvas");c.width=a.offsetWidth;c.height=b;return c.toDataURL("image/png")}})}
+function Aa(){return t(function*(){var a=document.body.offsetWidth,b=document.body.offsetHeight,d=document.body.cloneNode(!0);d.querySelectorAll('[class*="animate"]').forEach(c=>{c.classList.remove(...Array.from(c.classList).filter(e=>e.startsWith("animate")))});d.style.width=`${a}px`;d.style.height=`${b}px`;return d})}
+function Ba(a){return t(function*(){var b=document.body;if(Y()){var d=yield Aa();b=d;document.body.appendChild(d)}d=yield Z(b);Y()&&document.body.removeChild(b);window.parent.postMessage({type:"SEND_SCREENSHOT",image:d,topOffset:document.documentElement.scrollTop},a.origin)})}function Ca(a){return t(function*(){var b={type:"SEND_SCREENSHOT_FOR_DATA_VISUALIZATION",image:yield Z(document.body),topOffset:0};window.parent.postMessage(b,a.origin)})}
+window.addEventListener("message",a=>t(function*(){if(za.some(d=>a.origin.includes(d))){var b=a.data;b&&(b.type==="MAKE_SCREENSHOT"&&(yield Ba(a)),b.type==="MAKE_SCREENSHOT_FOR_DATA_VISUALIZATION"&&(yield Ca(a)))}}));
+})();</script><script data-bard-injected="true">(function() {
+  // Ensure this script is executed only once
+  if (window.firebaseAuthBridgeScriptLoaded) {
+    return;
+  }
+  window.firebaseAuthBridgeScriptLoaded = true;
+
+  let nextTokenPromiseId = 0;
+
+  // Stores { resolve, reject } for ongoing token requests
+  const pendingTokenPromises = {};
+
+  // Listen for messages from the Host Application
+  window.addEventListener('message', function(event) {
+
+    const messageData = event.data;
+
+  if (messageData && messageData.type === 'RESOLVE_NEW_FIREBASE_TOKEN') {
+      const { success, token, error, promiseId } = messageData ?? {};
+      if (pendingTokenPromises[promiseId]) {
+        if (success) {
+          pendingTokenPromises[promiseId].resolve(token);
+        } else {
+          pendingTokenPromises[promiseId].reject(new Error(error || 'Token refresh failed from host.'));
+        }
+        delete pendingTokenPromises[promiseId];
+      }
+    }
+  });
+
+  // Expose a function for the Generated App to request a new Firebase token
+  window.requestNewFirebaseToken = function() {
+    const currentPromiseId = nextTokenPromiseId++;
+    const promise = new Promise((resolve, reject) => {
+      pendingTokenPromises[currentPromiseId] = { resolve, reject };
+    });
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({
+        type: 'REQUEST_NEW_FIREBASE_TOKEN',
+        promiseId: currentPromiseId
+      }, '*');
+    } else {
+      pendingTokenPromises[currentPromiseId].reject(new Error('No parent window to request token from.'));
+      delete pendingTokenPromises[currentPromiseId];
+    }
+    return promise;
+  };
+})();</script><script data-bard-injected="true">
+let realOriginalGetUserMedia = null;
+if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+  realOriginalGetUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator.mediaDevices);
+}
+
+(function() {
+  if (navigator.mediaDevices && navigator.mediaDevices.__proto__) {
+    try {
+      Object.defineProperty(navigator.mediaDevices.__proto__, 'getUserMedia', {
+        get: function() {
+          return undefined; // Or throw an error
+        },
+        configurable: false
+      });
+    } catch (error) {
+      console.error("Error defining prototype getter:", error);
+    }
+  }
+})();
+
+(function() {
+  const pendingMediaResolvers = {};
+  let nextMediaPromiseId = 0;
+
+  function requestMediaPermissions(constraints) {
+    const mediaPromiseId = nextMediaPromiseId++;
+    const promise = new Promise((resolve, reject) => {
+      pendingMediaResolvers[mediaPromiseId] = (granted) => {
+        delete pendingMediaResolvers[mediaPromiseId];
+        resolve(granted);
+      };
+    });
+
+    window.parent.postMessage({
+      type: 'requestMediaPermission',
+      constraints: constraints,
+      promiseId: mediaPromiseId,
+    }, '*');
+
+    return promise;
+  }
+
+  let originalGetUserMedia = realOriginalGetUserMedia;
+
+  function interceptGetUserMedia() {
+    if (navigator.mediaDevices) {
+      Object.defineProperty(navigator.mediaDevices, 'getUserMedia', {
+        value: function(constraints) {
+          return requestMediaPermissions(constraints).then((granted) => {
+            if (granted) {
+              if (originalGetUserMedia) {
+                return originalGetUserMedia(constraints);
+              } else {
+                throw new Error("Original getUserMedia not available.");
+              }
+            } else {
+              throw new DOMException('Permission denied', 'NotAllowedError');
+            }
+          });
+        },
+        writable: false,
+        configurable: false
+      });
+    }
+  }
+
+  interceptGetUserMedia();
+
+  const observer = new MutationObserver(function(mutationsList, observer) {
+    for (const mutation of mutationsList) {
+      if (mutation.type === 'reconfigured' && mutation.name === 'getUserMedia' && mutation.object === navigator.mediaDevices) {
+        interceptGetUserMedia();
+      } else if (mutation.type === 'attributes' && mutation.attributeName === 'getUserMedia' && mutation.target === navigator.mediaDevices) {
+        interceptGetUserMedia();
+      } else if (mutation.type === 'childList' && mutation.addedNodes) {
+        mutation.addedNodes.forEach(node => {
+          if (node === navigator.mediaDevices) {
+            interceptGetUserMedia();
+          }
+        });
+      }
+    }
+  });
+
+  function interceptSpeechRecognition() {
+    if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+      return;
+    }
+
+    const OriginalSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    const SpeechRecognitionWrapper = function(...args) {
+      const recognizer = new OriginalSpeechRecognition(...args);
+      const originalStart = recognizer.start.bind(recognizer);
+
+      recognizer.start = function() {
+        requestMediaPermissions({ audio: true }).then(granted => {
+          if (granted) {
+            originalStart();
+          } else {
+            const errorEvent = new SpeechRecognitionErrorEvent('error');
+            errorEvent.error = 'not-allowed'; // This is the standard error for permission denial.
+            recognizer.dispatchEvent(errorEvent);
+          }
+        });
+      };
+
+      return recognizer;
+    };
+
+    SpeechRecognitionWrapper.prototype = OriginalSpeechRecognition.prototype;
+    SpeechRecognitionWrapper.prototype.constructor = SpeechRecognitionWrapper;
+
+    if (window.SpeechRecognition) {
+      window.SpeechRecognition = SpeechRecognitionWrapper;
+    }
+    if (window.webkitSpeechRecognition) {
+      window.webkitSpeechRecognition = SpeechRecognitionWrapper;
+    }
+  }
+
+  interceptSpeechRecognition();
+
+  window.addEventListener('message', function(event) {
+    if (event.data) {
+      if (event.data.type === 'resolveMediaPermission') {
+        const { promiseId, granted } = event.data;
+        if (pendingMediaResolvers[promiseId]) {
+          pendingMediaResolvers[promiseId](granted);
+        }
+      }
+    }
+  });
+
+})();</script><script ws-interception-config="{&quot;parentOrigin&quot;:&quot;https://gemini.google.com&quot;,&quot;proxiedDomains&quot;:[]}" data-bard-injected="true">(function(){'use strict';var u=typeof Object.defineProperties=="function"?Object.defineProperty:function(b,d,e){if(b==Array.prototype||b==Object.prototype)return b;b[d]=e.value;return b};function v(b){b=["object"==typeof globalThis&&globalThis,b,"object"==typeof window&&window,"object"==typeof self&&self,"object"==typeof global&&global];for(var d=0;d<b.length;++d){var e=b[d];if(e&&e.Math==Math)return e}throw Error("Cannot find global object");}var w=v(this);
+function y(b,d){if(d)a:{var e=w;b=b.split(".");for(var h=0;h<b.length-1;h++){var k=b[h];if(!(k in e))break a;e=e[k]}b=b[b.length-1];h=e[b];d=d(h);d!=h&&d!=null&&u(e,b,{configurable:!0,writable:!0,value:d})}}function z(b){function d(h){return b.next(h)}function e(h){return b.throw(h)}return new Promise(function(h,k){function m(n){n.done?h(n.value):Promise.resolve(n.value).then(d,e).then(m,k)}m(b.next())})}y("globalThis",function(b){return b||w});/*
+
+ Copyright The Closure Library Authors.
+ SPDX-License-Identifier: Apache-2.0
+*/
+function A(b,d){function e(){}e.prototype=d.prototype;b.i=d.prototype;b.prototype=new e;b.prototype.constructor=b;b.g=function(h,k,m){for(var n=Array(arguments.length-2),p=2;p<arguments.length;p++)n[p-2]=arguments[p];return d.prototype[k].apply(h,n)}};function B(b,d,e="*"){function h(a){if(typeof a==="string")return F.encode(a).buffer;if(a instanceof ArrayBuffer)return a.slice(0);if(ArrayBuffer.isView(a))return a.buffer.slice(a.byteOffset,a.byteOffset+a.byteLength);throw Error("Invalid data type");}function k(a){a=h(a);var f={type:"send",data:new Uint8Array(a)},g;(g=r)==null||g.postMessage(f,[a])}function m(){if(!r)throw Error("Data port not captured yet.");r.onmessage=a=>{if(a.data.type==="message"){a=new MessageEvent("message",{data:G.decode(a.data.data)});
+let f;(f=c.onmessage)==null||f.call(c,a);c.dispatchEvent(a)}}}function n(){if(!t)throw Error("Control port not captured yet.");t.onmessage=a=>{switch(a.data.type){case "open":l=1;var f=new Event("open"),g;(g=c.onopen)==null||g.call(c,f);c.dispatchEvent(f);q.forEach(H=>{k(H)});q=[];break;case "close":g=a.data;l=3;g=new CloseEvent("close",{code:g.code,reason:g.reason,wasClean:g.wasClean});(f=c.onclose)==null||f.call(c,g);c.dispatchEvent(g);break;case "error":l=3;f=new Event("error");let x;(x=c.onerror)==
+null||x.call(c,f);c.dispatchEvent(f)}}}function p(a){return z(function*(){var f=new MessageChannel;t=f.port1;var g=new MessageChannel;r=g.port1;n();m();window.parent.postMessage({type:"websocket_open",portOrdering:["control","data"],url:b,protocols:a||[],connectionId:I},e,[f.port2,g.port2])}())}var c=Reflect.construct(EventTarget,[],new.target);c.CONNECTING=0;c.OPEN=1;c.CLOSING=2;c.CLOSED=3;c.url=b;c.binaryType="arraybuffer";c.protocol="";c.h="";var l=0,t=null,r=null,q=[],F=new TextEncoder,G=new TextDecoder;
+c.onopen=null;c.onmessage=null;c.onclose=null;c.onerror=null;Object.defineProperty(c,"readyState",{get:()=>l,enumerable:!0,configurable:!0});Object.defineProperty(c,"bufferedAmount",{get:()=>{var a=0;q.forEach(f=>{a+=typeof f==="string"?f.length:f.byteLength});return a},enumerable:!0,configurable:!0});var I=function(){var a;return((a=globalThis.crypto)==null?0:a.randomUUID)?globalThis.crypto.randomUUID():"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,f=>{var g=Math.random()*16|0;return(f===
+"x"?g:g&3|8).toString(16)})}();c.send=a=>{if(l===1)a instanceof Blob?a.arrayBuffer().then(f=>{k(f)}):k(a);else if(l===0)if(typeof a==="string")q.push(a);else if(a instanceof ArrayBuffer||ArrayBuffer.isView(a))q.push(h(a));else throw Error("Sending Blob is not supported before the connection is open.");else console.debug("WebSocket send called in CLOSING or CLOSED state; ignored.")};c.close=(a=1E3,f="")=>{if(l!==2&&l!==3){l=2;a={type:"close",code:a,reason:f,wasClean:a===1E3};var g;(g=t)==null||g.postMessage(a)}};
+Promise.resolve().then(()=>p(d));return c}A(B,EventTarget);var C=document.currentScript,D=C==null?void 0:C.getAttribute("ws-interception-config");if(!D)throw Error("WebSocket Interceptor: Missing ws-interception-config attribute in the script tag.");var E=JSON.parse(D);if(!E.parentOrigin||typeof E.parentOrigin!=="string")throw Error("WebSocket Interceptor: Invalid parentOrigin in ws-interception-config");
+(function(b){var d=Object.getOwnPropertyDescriptor(window,"WebSocket");if(!d||d.writable||d.configurable)d=Object.assign(function(e,h){try{let k=(new URL(e)).hostname;if(b.proxiedDomains.some(m=>k===m||k.endsWith(`.${m}`)))return new B(e,h,b.parentOrigin)}catch(k){throw window.parent.postMessage({type:"websocket_blocked",url:e,reason:"blocked_invalid_url"},b.parentOrigin),new DOMException(`WebSocket connection to '${e}' is not allowed in Canvas.`,"SecurityError");}window.parent.postMessage({type:"websocket_blocked",
+url:e,reason:"blocked_domain_not_allowlisted"},b.parentOrigin);throw new DOMException(`WebSocket connection to '${e}' is not allowed in Canvas.`,"SecurityError");},{CONNECTING:0,OPEN:1,CLOSING:2,CLOSED:3}),Object.defineProperty(window,"WebSocket",{value:d,writable:!1,configurable:!1})})({proxiedDomains:E.proxiedDomains||[],parentOrigin:E.parentOrigin});}).call(this);
+</script><script data-bard-injected="true">((function(modelInformation) {
+  const originalFetch = window.fetch;
+  // TODO: b/421908508 - Move these out of the script and match all generative AI model calls.
+  let googleLlmBaseApiUrls = [
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.textModelName + ':streamGenerateContent',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.textModelName + ':generateContent',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageModelName + ':predict',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageModelName + ':predictLongRunning',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageEditModelName + ':generateContent',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.imageTransformModelName + ':generateContent',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.videoModelName + ':predict',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.videoModelName + ':predictLongRunning',
+    'https://generativelanguage.googleapis.com/v1beta/models/' + modelInformation.ttsModelName + ':generateContent',
+  ];
+  modelInformation.deprecatedTextModelNames.forEach((modelName) => {
+    googleLlmBaseApiUrls.push(
+      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
+      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
+    );
+  });
+  modelInformation.deprecatedImageModelNames.forEach((modelName) => {
+    googleLlmBaseApiUrls.push(
+      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':predict',
+      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':predictLongRunning',
+      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
+      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
+    );
+  });
+  modelInformation.deprecatedGenerateImageModelNames.forEach((modelName) => {
+    googleLlmBaseApiUrls.push(
+      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
+      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
+    );
+  });
+  modelInformation.deprecatedImageTransformModelNames.forEach((modelName) => {
+    googleLlmBaseApiUrls.push(
+      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':generateContent',
+      'https://generativelanguage.googleapis.com/v1beta/models/' + modelName + ':streamGenerateContent',
+    );
+  });
+
+  const pendingFetchResolvers = {};
+  let nextPromiseId = 0;
+
+  function handleStringInput(input, optionsArgument) {
+    const actualUrl = input;
+    const fetchCallArgs = [actualUrl, optionsArgument];
+    const effectiveOptions = optionsArgument || {};
+    const bodyForApiKeyCheck = effectiveOptions.body;
+    const bodyForPostMessage = effectiveOptions.body;
+    return { actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage };
+  }
+
+  function handleRequestInput(input, optionsArgument) {
+    const actualUrl = input.url;
+    const fetchCallArgs = [input, optionsArgument];
+    const effectiveOptions = { method: input.method, headers: new Headers(input.headers) };
+    let bodyForApiKeyCheck;
+    let bodyForPostMessage;
+
+    if (optionsArgument) {
+      if (optionsArgument.method) effectiveOptions.method = optionsArgument.method;
+      if (optionsArgument.headers) effectiveOptions.headers = new Headers(optionsArgument.headers);
+      if ('body' in optionsArgument) {
+        bodyForApiKeyCheck = optionsArgument.body;
+        bodyForPostMessage = optionsArgument.body;
+      } else {
+        bodyForApiKeyCheck = undefined;
+        bodyForPostMessage = input.body;
+      }
+    } else {
+      bodyForApiKeyCheck = undefined;
+      bodyForPostMessage = input.body;
+    }
+    return { actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage };
+  }
+
+  window.fetch = function(input, optionsArgument) {
+    let actualUrl;
+    let fetchCallArgs;
+    let effectiveOptions = {};
+    let bodyForApiKeyCheck;
+    let bodyForPostMessage;
+
+    if (typeof input === 'string') {
+      ({actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage} = handleStringInput(input, optionsArgument));
+    } else if (input instanceof Request) {
+      ({actualUrl, fetchCallArgs, effectiveOptions, bodyForApiKeyCheck, bodyForPostMessage} = handleRequestInput(input, optionsArgument));
+    } else {
+      return originalFetch.apply(window, [input, optionsArgument]);
+    }
+
+    effectiveOptions.method = effectiveOptions.method || 'GET';
+    if (!effectiveOptions.headers) {
+      effectiveOptions.headers = new Headers();
+    }
+
+
+    if (typeof actualUrl === 'string' && googleLlmBaseApiUrls.some((url) => actualUrl.startsWith(url))) {
+      let apiKeyIsNull = true;
+
+      const regex = new RegExp("models/([^:]+)");
+      const modelNameMatch = actualUrl.match(regex);
+      const modelName = modelNameMatch ? modelNameMatch[1] : 'unspecified';
+
+
+      try {
+        const urlObject = new URL(actualUrl);  // Use URL object for robust parsing
+        const apiKeyParam = urlObject.searchParams.get('key');
+        if (apiKeyParam) {
+          apiKeyIsNull = false;
+        }
+      } catch (e) {
+        // Continue checks even if URL parsing fails
+      }
+
+      if (apiKeyIsNull && effectiveOptions.headers) {
+        const h = new Headers(effectiveOptions.headers);
+        const apiKeyHeaderValue = h.get('X-API-Key') || h.get('x-api-key');
+        if (apiKeyHeaderValue) {
+          apiKeyIsNull = false;
+          return originalFetch.apply(window, fetchCallArgs);
+        }
+      }
+
+      if (apiKeyIsNull && effectiveOptions.method && ['POST', 'PUT', 'PATCH'].includes(effectiveOptions.method.toUpperCase()) && typeof bodyForApiKeyCheck === 'string') {
+        try {
+          const bodyData = JSON.parse(bodyForApiKeyCheck);
+          if (bodyData && bodyData.apiKey) {
+            apiKeyIsNull = false;
+            return originalFetch.apply(window, fetchCallArgs);
+          }
+        } catch (e) {
+          // Ignore JSON parsing errors
+        }
+      }
+
+      if(apiKeyIsNull) {
+        const promiseId = nextPromiseId++;
+        const promise = new Promise((resolve) => {
+          pendingFetchResolvers[promiseId] = (resolvedResponse) => {
+            delete pendingFetchResolvers[promiseId];
+            resolve(resolvedResponse);
+          };
+        });
+
+        let serializedBodyForPostMessage;
+        if (typeof bodyForPostMessage === 'string' || bodyForPostMessage == null) {
+            serializedBodyForPostMessage = bodyForPostMessage;
+        } else if (bodyForPostMessage instanceof ReadableStream) {
+            serializedBodyForPostMessage = null;
+        } else {
+            try {
+                serializedBodyForPostMessage = JSON.stringify(bodyForPostMessage);
+            } catch (e) {
+                serializedBodyForPostMessage = null;
+            }
+        }
+
+        const messageOptions = {
+            method: effectiveOptions.method,
+            headers: Object.fromEntries(new Headers(effectiveOptions.headers).entries()),
+            body: serializedBodyForPostMessage
+        };
+
+        window.parent.postMessage({
+          type: 'requestFetch',
+          url: actualUrl,
+          modelName: modelName,
+          options: messageOptions,
+          promiseId: promiseId,
+        }, '*');
+
+        return promise;
+      }
+      return originalFetch.apply(window, fetchCallArgs);
+    }
+    return originalFetch.apply(window, fetchCallArgs);
+  };
+
+  window.addEventListener('message', function(event) {
+    if (event.data && event.data.type === 'resolveFetch') {
+      const { promiseId, response } = event.data;
+      if (pendingFetchResolvers[promiseId]) {
+        try {
+          const reconstructedResponse = new Response(response.body, {
+            status: response.status,
+            statusText: response.statusText,
+            headers: new Headers(response.headers),
+          });
+          pendingFetchResolvers[promiseId](reconstructedResponse);
+        } catch (error) {
+          pendingFetchResolvers[promiseId](new Response(null, { status: 500, statusText: "Interceptor Response Reconstruction Error" }));
+        }
+      }
+    }
+  });
+
+}))({"textModelName":"gemini-3-flash-preview","imageModelName":"imagen-4.0-generate-001","imageEditModelName":"gemini-3.1-flash-image","imageTransformModelName":"gemini-3-pro-image","videoModelName":"veo-2.0-generate-001","ttsModelName":"gemini-2.5-flash-preview-tts","deprecatedTextModelNames":["gemini-2.0-flash","gemini-2.5-flash","gemini-2.5-flash-preview-04-17","gemini-2.5-flash-preview-05-20","gemini-2.5-flash-preview-09-2025"],"deprecatedImageModelNames":["imagen-3.0-generate-001","imagen-3.0-generate-002"],"deprecatedGenerateImageModelNames":["gemini-2.5-flash-image-preview","gemini-2.5-flash-image","gemini-3.1-flash-image-preview"],"deprecatedImageTransformModelNames":["gemini-3-pro-image-preview-11-2025"]})</script><script data-bard-injected="true">(function(){'use strict';function a(){window.parent.postMessage({type:"interaction"},"*")}window.addEventListener("click",a,{capture:!0,passive:!0});window.addEventListener("touchstart",a,{capture:!0,passive:!0});window.addEventListener("keydown",a,{capture:!0,passive:!0});}).call(this);
+</script><script data-bard-injected="true">(function() {
+  const originalConsoleLog = console.log;
+  const originalConsoleError = console.error;
+
+    /**
+   * Normalizes an error event or a promise rejection reason into a structured error object.
+   * @param {*} errorEventOrReason The error object or reason.
+   * @return {object} Structured error data { message, name, stack }.
+   */
+  function getErrorObject(errorEventOrReason) {
+    if (errorEventOrReason instanceof Error) {
+      return {
+        message: errorEventOrReason.message,
+        name: errorEventOrReason.name,
+        stack: errorEventOrReason.stack,
+      };
+    }
+    // Fallback for non-Error objects.
+    try {
+      return {
+        message: JSON.stringify(errorEventOrReason),
+        name: 'UnknownErrorType',
+        stack: null,
+      };
+    } catch (e) {
+      return {
+        message: String(errorEventOrReason),
+        name: 'UnknownErrorTypeNonStringifiable',
+        stack: null,
+      };
+    }
+  }
+
+  /**
+   * Converts an array of arguments (from log/error) into a single string.
+   * Handles Error objects specially to include their message and stack.
+   * @param {Array<*>} args - Arguments passed to console methods.
+   * @return {string} A string representation of the arguments.
+   */
+  function stringifyArgs(args) {
+    return args
+      .map((arg) => {
+        if (arg instanceof Error) {
+          const {message, stack} = arg;
+          return `Error: ${message}${stack ? ('\nStack: ' + stack) : ''}`;
+        }
+        if (typeof arg === 'object' && arg !== null) {
+          try {
+            return JSON.stringify(arg);
+          } catch (error) {
+            return '[Circular Object]';
+          }
+        } else {
+          return String(arg);
+        }
+      })
+      .join(' ');
+  }
+
+  console.log = function(...args) {
+    const logString = stringifyArgs(args);
+    window.parent.postMessage({ type: 'log', message: logString }, '*');
+    originalConsoleLog.apply(console, args);
+  };
+
+  console.error = function(...args) {
+    let errorData;
+    if (args.length > 0 && args[0] instanceof Error) {
+      const err = args[0];
+      // If the first arg is an Error, capture its details.
+      errorData = {
+        type: 'error',
+        source: 'CONSOLE_ERROR',
+        ...getErrorObject(err),
+        rawArgsString: stringifyArgs(args.slice(1)),
+        timestamp: new Date().toISOString(),
+      };
+    } else {
+      // If not an Error object, treat all args as a general error message.
+      errorData = {
+        type: 'error',
+        source: 'CONSOLE_ERROR',
+        message: stringifyArgs(args),
+        name: 'ConsoleLoggedError',
+        stack: null,
+        timestamp: new Date().toISOString(),
+      };
+    }
+    window.parent.postMessage(errorData, '*');
+    originalConsoleError.apply(console, args);
+  };
+
+  // Listen for global unhandled synchronous errors.
+  window.addEventListener('error', function(event) {
+    const errorDetails = event.error ? getErrorObject(event.error) : {
+      message: event.message,
+      name: 'GlobalError',
+      stack: null,
+      filename: event.filename,
+      lineno: event.lineno,
+      colno: event.colno,
+    };
+
+    window.parent.postMessage({
+      type: 'error',
+      source: 'global',
+      ...errorDetails,
+      message: errorDetails.message || event.message,
+      timestamp: new Date().toISOString(),
+    }, '*');
+  });
+
+  // Listen for unhandled promise rejections (asynchronous errors).
+  window.addEventListener('unhandledrejection', function(event) {
+    const errorDetails = getErrorObject(event.reason);
+
+    window.parent.postMessage({
+      type: 'error',
+      source: 'unhandledrejection',
+      ...errorDetails,
+      message: errorDetails.message || 'Unhandled Promise Rejection',
+      timestamp: new Date().toISOString(),
+    }, '*');
+  });
+
+})();</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>皮克敏蘑菇重生快速計算器</title>
+    
+    <!-- iOS 全螢幕 App 模式設定 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="皮克敏重生">
+    
+    <!-- Android 全螢幕 App 模式設定 -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#111827">
+
+    <!-- App 圖示 (使用 Emoji SVG 做為高解析度圖示) -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%2310b981%22/&gt;&lt;text y=%22.75em%22 x=%225%22 font-size=%2275%22&gt;🍄&lt;/text&gt;&lt;/svg&gt;">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,&lt;svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22&gt;&lt;rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%2310b981%22/&gt;&lt;text y=%22.75em%22 x=%225%22 font-size=%2275%22&gt;🍄&lt;/text&gt;&lt;/svg&gt;">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Noto+Sans+TC:wght=400;500;700&display=swap');
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f7f5f0;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        .pikmin-font {
+            font-family: 'Fredoka One', 'Noto Sans TC', sans-serif;
+        }
+        /* 倒數低於 30 秒時的急促閃爍特效 */
+        @keyframes pulse-red {
+            0%, 100% { background-color: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.4); }
+            50% { background-color: rgba(239, 68, 68, 0.25); border-color: rgba(239, 68, 68, 0.6); }
+        }
+        .urgent-row {
+            animation: pulse-red 1.5s infinite;
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.pointer-events-none{pointer-events:none}.fixed{position:fixed}.bottom-6{bottom:1.5rem}.left-1\/2{left:50%}.z-50{z-index:50}.col-span-2{grid-column:span 2 / span 2}.col-span-3{grid-column:span 3 / span 3}.col-span-1{grid-column:span 1 / span 1}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:0.25rem}.mb-1\.5{margin-bottom:0.375rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.mr-1{margin-right:0.25rem}.mr-1\.5{margin-right:0.375rem}.mr-2{margin-right:0.5rem}.mt-2{margin-top:0.5rem}.mt-6{margin-top:1.5rem}.mt-0\.5{margin-top:0.125rem}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-4{height:1rem}.min-h-screen{min-height:100vh}.w-full{width:100%}.w-20{width:5rem}.w-4{width:1rem}.min-w-\[130px\]{min-width:130px}.max-w-5xl{max-width:64rem}.flex-1{flex:1 1 0%}.-translate-x-1\/2{--tw-translate-x:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.list-inside{list-style-position:inside}.list-decimal{list-style-type:decimal}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-12{grid-template-columns:repeat(12, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-start{justify-content:flex-start}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-2{gap:0.5rem}.gap-2\.5{gap:0.625rem}.gap-4{gap:1rem}.gap-3{gap:0.75rem}.space-x-1 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.25rem * var(--tw-space-x-reverse));margin-left:calc(0.25rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-1\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.375rem * var(--tw-space-x-reverse));margin-left:calc(0.375rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-2 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.5rem * var(--tw-space-x-reverse));margin-left:calc(0.5rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-2\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.625rem * var(--tw-space-x-reverse));margin-left:calc(0.625rem * calc(1 - var(--tw-space-x-reverse)))}.space-x-3 > :not([hidden]) ~ :not([hidden]){--tw-space-x-reverse:0;margin-right:calc(0.75rem * var(--tw-space-x-reverse));margin-left:calc(0.75rem * calc(1 - var(--tw-space-x-reverse)))}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.divide-y > :not([hidden]) ~ :not([hidden]){--tw-divide-y-reverse:0;border-top-width:calc(1px * calc(1 - var(--tw-divide-y-reverse)));border-bottom-width:calc(1px * var(--tw-divide-y-reverse))}.divide-stone-100 > :not([hidden]) ~ :not([hidden]){--tw-divide-opacity:1;border-color:rgb(245 245 244 / var(--tw-divide-opacity, 1))}.overflow-hidden{overflow:hidden}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-dashed{border-style:dashed}.border-emerald-100{--tw-border-opacity:1;border-color:rgb(209 250 229 / var(--tw-border-opacity, 1))}.border-emerald-600{--tw-border-opacity:1;border-color:rgb(5 150 105 / var(--tw-border-opacity, 1))}.border-emerald-700{--tw-border-opacity:1;border-color:rgb(4 120 87 / var(--tw-border-opacity, 1))}.border-stone-100{--tw-border-opacity:1;border-color:rgb(245 245 244 / var(--tw-border-opacity, 1))}.border-stone-200{--tw-border-opacity:1;border-color:rgb(231 229 228 / var(--tw-border-opacity, 1))}.border-stone-200\/60{border-color:rgb(231 229 228 / 0.6)}.bg-amber-100{--tw-bg-opacity:1;background-color:rgb(254 243 199 / var(--tw-bg-opacity, 1))}.bg-emerald-50{--tw-bg-opacity:1;background-color:rgb(236 253 245 / var(--tw-bg-opacity, 1))}.bg-emerald-600{--tw-bg-opacity:1;background-color:rgb(5 150 105 / var(--tw-bg-opacity, 1))}.bg-emerald-700\/60{background-color:rgb(4 120 87 / 0.6)}.bg-stone-100{--tw-bg-opacity:1;background-color:rgb(245 245 244 / var(--tw-bg-opacity, 1))}.bg-stone-200{--tw-bg-opacity:1;background-color:rgb(231 229 228 / var(--tw-bg-opacity, 1))}.bg-stone-200\/60{background-color:rgb(231 229 228 / 0.6)}.bg-stone-50{--tw-bg-opacity:1;background-color:rgb(250 250 249 / var(--tw-bg-opacity, 1))}.bg-stone-900{--tw-bg-opacity:1;background-color:rgb(28 25 23 / var(--tw-bg-opacity, 1))}.bg-teal-600{--tw-bg-opacity:1;background-color:rgb(13 148 136 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-emerald-800{--tw-bg-opacity:1;background-color:rgb(6 95 70 / var(--tw-bg-opacity, 1))}.bg-gradient-to-br{background-image:linear-gradient(to bottom right, var(--tw-gradient-stops))}.from-emerald-800{--tw-gradient-from:#065f46 var(--tw-gradient-from-position);--tw-gradient-to:rgb(6 95 70 / 0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.to-teal-900{--tw-gradient-to:#134e4a var(--tw-gradient-to-position)}.p-1\.5{padding:0.375rem}.p-3\.5{padding:0.875rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.px-1{padding-left:0.25rem;padding-right:0.25rem}.px-4{padding-left:1rem;padding-right:1rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.pb-12{padding-bottom:3rem}.pt-6{padding-top:1.5rem}.pt-2{padding-top:0.5rem}.text-center{text-align:center}.text-right{text-align:right}.font-mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.text-\[10px\]{font-size:10px}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.font-medium{font-weight:500}.leading-normal{line-height:1.5}.leading-relaxed{line-height:1.625}.text-amber-800{--tw-text-opacity:1;color:rgb(146 64 14 / var(--tw-text-opacity, 1))}.text-emerald-100{--tw-text-opacity:1;color:rgb(209 250 229 / var(--tw-text-opacity, 1))}.text-emerald-600{--tw-text-opacity:1;color:rgb(5 150 105 / var(--tw-text-opacity, 1))}.text-emerald-700{--tw-text-opacity:1;color:rgb(4 120 87 / var(--tw-text-opacity, 1))}.text-emerald-800{--tw-text-opacity:1;color:rgb(6 95 70 / var(--tw-text-opacity, 1))}.text-emerald-900{--tw-text-opacity:1;color:rgb(6 78 59 / var(--tw-text-opacity, 1))}.text-red-500{--tw-text-opacity:1;color:rgb(239 68 68 / var(--tw-text-opacity, 1))}.text-stone-400{--tw-text-opacity:1;color:rgb(168 162 158 / var(--tw-text-opacity, 1))}.text-stone-500{--tw-text-opacity:1;color:rgb(120 113 108 / var(--tw-text-opacity, 1))}.text-stone-600{--tw-text-opacity:1;color:rgb(87 83 78 / var(--tw-text-opacity, 1))}.text-stone-700{--tw-text-opacity:1;color:rgb(68 64 60 / var(--tw-text-opacity, 1))}.text-stone-800{--tw-text-opacity:1;color:rgb(41 37 36 / var(--tw-text-opacity, 1))}.text-teal-600{--tw-text-opacity:1;color:rgb(13 148 136 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.underline{-webkit-text-decoration-line:underline;text-decoration-line:underline}.opacity-0{opacity:0}.opacity-100{opacity:1}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-md{--tw-shadow:0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-300{transition-duration:300ms}.duration-200{transition-duration:200ms}.hover\:bg-amber-200:hover{--tw-bg-opacity:1;background-color:rgb(253 230 138 / var(--tw-bg-opacity, 1))}.hover\:bg-emerald-700:hover{--tw-bg-opacity:1;background-color:rgb(4 120 87 / var(--tw-bg-opacity, 1))}.hover\:bg-emerald-700\/80:hover{background-color:rgb(4 120 87 / 0.8)}.hover\:bg-stone-100:hover{--tw-bg-opacity:1;background-color:rgb(245 245 244 / var(--tw-bg-opacity, 1))}.hover\:bg-stone-300:hover{--tw-bg-opacity:1;background-color:rgb(214 211 209 / var(--tw-bg-opacity, 1))}.hover\:bg-teal-700:hover{--tw-bg-opacity:1;background-color:rgb(15 118 110 / var(--tw-bg-opacity, 1))}.hover\:text-stone-800:hover{--tw-text-opacity:1;color:rgb(41 37 36 / var(--tw-text-opacity, 1))}.hover\:text-emerald-600:hover{--tw-text-opacity:1;color:rgb(5 150 105 / var(--tw-text-opacity, 1))}.hover\:text-red-500:hover{--tw-text-opacity:1;color:rgb(239 68 68 / var(--tw-text-opacity, 1))}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.focus\:ring-2:focus{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}.focus\:ring-emerald-500:focus{--tw-ring-opacity:1;--tw-ring-color:rgb(16 185 129 / var(--tw-ring-opacity, 1))}.active\:translate-y-0\.5:active{--tw-translate-y:0.125rem;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.disabled\:bg-stone-100:disabled{--tw-bg-opacity:1;background-color:rgb(245 245 244 / var(--tw-bg-opacity, 1))}.disabled\:opacity-75:disabled{opacity:0.75}@media (min-width: 768px){.md\:col-span-2{grid-column:span 2 / span 2}.md\:col-span-3{grid-column:span 3 / span 3}.md\:grid{display:grid}.md\:hidden{display:none}.md\:w-auto{width:auto}.md\:flex-initial{flex:0 1 auto}.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.md\:grid-cols-12{grid-template-columns:repeat(12, minmax(0, 1fr))}.md\:flex-row{flex-direction:row}.md\:flex-col{flex-direction:column}.md\:items-center{align-items:center}.md\:justify-center{justify-content:center}.md\:gap-4{gap:1rem}.md\:border-t-0{border-top-width:0px}.md\:pt-0{padding-top:0px}.md\:text-center{text-align:center}}</style><link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22%E7%9A%AE%E5%85%8B%E6%95%8F%E8%98%91%E8%8F%87%E9%87%8D%E7%94%9F%E5%BF%AB%E9%80%9F%E8%A8%88%E7%AE%97%E5%99%A8%22%2C%22short_name%22%3A%22%E7%9A%AE%E5%85%8B%E6%95%8F%E9%87%8D%E7%94%9F%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f7f5f0%22%2C%22theme_color%22%3A%22%23111827%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%3Butf8%2C%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20100%20100'%3E%3Crect%20width%3D'100'%20height%3D'100'%20rx%3D'20'%20fill%3D'%252310b981'%2F%3E%3Ctext%20y%3D'.75em'%20x%3D'5'%20font-size%3D'75'%3E%F0%9F%8D%84%3C%2Ftext%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%22%7D%2C%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%3Butf8%2C%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20100%20100'%3E%3Crect%20width%3D'100'%20height%3D'100'%20rx%3D'20'%20fill%3D'%252310b981'%2F%3E%3Ctext%20y%3D'.75em'%20x%3D'5'%20font-size%3D'75'%3E%F0%9F%8D%84%3C%2Ftext%3E%3C%2Fsvg%3E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%22%7D%5D%7D"></head>
+<body class="min-h-screen text-stone-800 pb-12">
+
+    <div class="max-w-5xl mx-auto px-4 py-6">
+        
+        <!-- 標頭區 -->
+        <header class="flex flex-col md:flex-row justify-between items-center bg-white p-5 rounded-2xl shadow-sm border border-stone-200/60 mb-6 gap-4">
+            <div class="flex items-center space-x-3">
+                <span class="text-3xl">🍄</span>
+                <div>
+                    <h1 class="text-xl font-bold text-stone-800">皮克敏蘑菇重生快速計算器 PWA</h1>
+                    <p class="text-xs text-stone-500 font-medium">手動輸入剩餘打倒時間，基準時間自動對時，一鍵鎖定倒數！</p>
+                </div>
+            </div>
+            <!-- 當前時間 -->
+            <div class="text-sm text-emerald-700 bg-emerald-50 px-4 py-2 rounded-xl border border-emerald-100 font-mono font-bold" id="current-time-display">目前時間: 10:05:28</div>
+        </header>
+
+        <!-- PWA 功能頁籤導覽列 -->
+        <div class="flex space-x-2 mb-6 bg-stone-200/60 p-1.5 rounded-xl">
+            <button onclick="switchTab('calc')" id="tab-btn-calc" class="flex-1 py-2.5 text-sm font-bold rounded-lg transition-all text-stone-500 hover:text-stone-800">
+                🍄 蘑菇計算面板
+            </button>
+            <button onclick="switchTab('pwa')" id="tab-btn-pwa" class="flex-1 py-2.5 text-sm font-bold rounded-lg transition-all bg-white text-emerald-800 shadow-sm">
+                📱 PWA 離線安裝 &amp; 下載指南
+            </button>
+        </div>
+
+        <!-- 頁籤一：蘑菇計算面板 -->
+        <div id="tab-content-calc" class="space-y-6 hidden">
+            
+            <!-- 手機背景執行守護者面板 -->
+            <section class="bg-gradient-to-br from-emerald-800 to-teal-900 text-white rounded-2xl p-5 shadow-lg border border-emerald-700">
+                <div class="flex items-center space-x-2.5 mb-3">
+                    <span class="text-2xl">📱</span>
+                    <h2 class="text-base font-bold">手機後台執行守護者（防休眠 / 浮動視窗）</h2>
+                </div>
+                <p class="text-xs text-emerald-100 leading-relaxed mb-4">
+                    iOS 與 Android 系統在您切換回皮克敏遊戲時，會強迫後台瀏覽器休眠，導致計時暫停、音效不響。
+                    點擊下方按鈕啟動<strong>「手機浮動視窗」</strong>，螢幕上會出現一個小小的倒數畫面。此時切換回遊戲，小視窗不僅可以隨時監控，更能強迫系統保持網頁在後台運作，讓 20 秒前警報與重生提示音 100% 準確響起！
+                </p>
+                <div class="flex flex-wrap gap-2.5">
+                    <!-- 啟動 PiP 按鈕 -->
+                    <button id="btn-pip" onclick="togglePip()" class="bg-white hover:bg-stone-100 text-emerald-900 font-extrabold text-xs px-4 py-2.5 rounded-xl transition flex items-center space-x-1.5 shadow-md active:translate-y-0.5">
+                        <span id="pip-btn-icon">📺</span>
+                        <span id="pip-btn-text">啟動「手機浮動小視窗」</span>
+                    </button>
+                    <!-- 防止螢幕休眠按鈕 -->
+                    <button id="btn-wakelock" onclick="toggleWakeLock()" class="bg-emerald-700/60 hover:bg-emerald-700/80 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition flex items-center space-x-1.5 border border-emerald-600">
+                        <span id="wake-btn-icon">💡</span>
+                        <span id="wake-btn-text">保持螢幕喚醒：未啟用</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- 隱藏用於子母畫面(PiP)渲染的 Canvas 與 Video 元素 -->
+            <canvas id="pip-canvas" width="300" height="240" class="hidden"></canvas>
+            <video id="pip-video" autoplay="" playsinline="" muted="" class="hidden"></video>
+
+            <!-- 計算表格主結構 -->
+            <main class="bg-white rounded-2xl shadow-sm border border-stone-200/60 overflow-hidden">
+                
+                <!-- 表格標題列 (桌機版) -->
+                <div class="hidden md:grid grid-cols-12 gap-4 bg-stone-100 p-4 font-bold text-stone-600 text-sm border-b border-stone-200">
+                    <div class="col-span-3">📍 地點名稱 (手動)</div>
+                    <div class="col-span-3 text-center">🕒 基準對時 (自動)</div>
+                    <div class="col-span-2 text-center">⏳ 剩餘打倒時間 (手動)</div>
+                    <div class="col-span-2 text-center">🌱 預估重生時間 (刷新)</div>
+                    <div class="col-span-2 text-center">⚙️ 操作</div>
+                </div>
+
+                <!-- 動態生成列容器 -->
+                <div id="rows-container" class="divide-y divide-stone-100">
+                <div id="row-slot_user_longhu_1782871524313" class="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 p-4 items-center transition-all duration-200 bg-stone-50 text-stone-400">
+                    
+                    <div class="col-span-1 md:col-span-3 flex items-center space-x-2">
+                        <span class="md:hidden text-xs text-stone-400 font-bold w-20">📍 地點：</span>
+                        <input type="text" value="龍湖廟" placeholder="輸入地點 (例如: 捷運站)" oninput="handleInputChange('slot_user_longhu_1782871524313', 'location', this.value)" disabled="" class="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition text-sm disabled:opacity-75 disabled:bg-stone-100 font-medium">
+                    </div>
+
+                    <div class="col-span-1 md:col-span-3 flex items-center space-x-2 justify-start md:justify-center">
+                        <span class="md:hidden text-xs text-stone-400 font-bold w-20">🕒 基準時間：</span>
+                        <div class="flex items-center space-x-1.5 px-3 py-2 bg-stone-50 border border-stone-200/60 rounded-xl w-full md:w-auto justify-center min-w-[130px]">
+                            <span id="base-time-slot_user_longhu_1782871524313" class="font-mono text-sm font-medium text-stone-400">09:37:36</span>
+                        </div>
+                    </div>
+
+                    <div class="col-span-1 md:col-span-2 flex items-center space-x-2">
+                        <span class="md:hidden text-xs text-stone-400 font-bold w-20">⏳ 剩餘打倒：</span>
+                        <input type="text" value="已在冷卻中" placeholder="24:35 或 24" oninput="handleInputChange('slot_user_longhu_1782871524313', 'remainingTime', this.value)" disabled="" class="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition text-sm text-center font-bold font-mono disabled:opacity-75 disabled:bg-stone-100">
+                    </div>
+
+                    <div class="col-span-1 md:col-span-2 flex md:flex-col justify-between md:justify-center items-center md:items-center">
+                        <span class="md:hidden text-xs text-stone-400 font-bold w-20">🌱 重生刷新：</span>
+                        <div class="text-right md:text-center">
+                            <div id="respawn-time-slot_user_longhu_1782871524313" class="font-mono text-base font-extrabold text-stone-400">09:42:36</div>
+                            <div id="countdown-slot_user_longhu_1782871524313" class="text-[10px] text-stone-400 font-medium mt-0.5">🌱 已重生！</div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-1 md:col-span-2 flex items-center justify-end space-x-1 pt-2 md:pt-0 border-t border-dashed border-stone-100 md:border-t-0">
+                        <button onclick="toggleLock('slot_user_longhu_1782871524313')" class="flex-1 md:flex-initial text-xs font-bold py-1.5 px-3 rounded-lg transition-colors bg-amber-100 hover:bg-amber-200 text-amber-800">
+                            解鎖
+                        </button>
+                        
+                        <button onclick="copySlotInfo('slot_user_longhu_1782871524313')" title="複製分享文字" class="p-1.5 text-stone-400 hover:text-emerald-600 hover:bg-stone-100 rounded-lg transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                        </button>
+
+                        <button onclick="deleteRow('slot_user_longhu_1782871524313')" title="刪除此列" class="p-1.5 text-stone-400 hover:text-red-500 hover:bg-stone-100 rounded-lg transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                    </div>
+
+                </div>
+                
+                <div id="row-slot_user_pavilion_1782871524313" class="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 p-4 items-center transition-all duration-200 bg-stone-50 text-stone-400">
+                    
+                    <div class="col-span-1 md:col-span-3 flex items-center space-x-2">
+                        <span class="md:hidden text-xs text-stone-400 font-bold w-20">📍 地點：</span>
+                        <input type="text" value="公園涼亭" placeholder="輸入地點 (例如: 捷運站)" oninput="handleInputChange('slot_user_pavilion_1782871524313', 'location', this.value)" disabled="" class="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition text-sm disabled:opacity-75 disabled:bg-stone-100 font-medium">
+                    </div>
+
+                    <div class="col-span-1 md:col-span-3 flex items-center space-x-2 justify-start md:justify-center">
+                        <span class="md:hidden text-xs text-stone-400 font-bold w-20">🕒 基準時間：</span>
+                        <div class="flex items-center space-x-1.5 px-3 py-2 bg-stone-50 border border-stone-200/60 rounded-xl w-full md:w-auto justify-center min-w-[130px]">
+                            <span id="base-time-slot_user_pavilion_1782871524313" class="font-mono text-sm font-medium text-stone-400">09:39:25</span>
+                        </div>
+                    </div>
+
+                    <div class="col-span-1 md:col-span-2 flex items-center space-x-2">
+                        <span class="md:hidden text-xs text-stone-400 font-bold w-20">⏳ 剩餘打倒：</span>
+                        <input type="text" value="已在冷卻中" placeholder="24:35 或 24" oninput="handleInputChange('slot_user_pavilion_1782871524313', 'remainingTime', this.value)" disabled="" class="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition text-sm text-center font-bold font-mono disabled:opacity-75 disabled:bg-stone-100">
+                    </div>
+
+                    <div class="col-span-1 md:col-span-2 flex md:flex-col justify-between md:justify-center items-center md:items-center">
+                        <span class="md:hidden text-xs text-stone-400 font-bold w-20">🌱 重生刷新：</span>
+                        <div class="text-right md:text-center">
+                            <div id="respawn-time-slot_user_pavilion_1782871524313" class="font-mono text-base font-extrabold text-stone-400">09:44:25</div>
+                            <div id="countdown-slot_user_pavilion_1782871524313" class="text-[10px] text-stone-400 font-medium mt-0.5">🌱 已重生！</div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-1 md:col-span-2 flex items-center justify-end space-x-1 pt-2 md:pt-0 border-t border-dashed border-stone-100 md:border-t-0">
+                        <button onclick="toggleLock('slot_user_pavilion_1782871524313')" class="flex-1 md:flex-initial text-xs font-bold py-1.5 px-3 rounded-lg transition-colors bg-amber-100 hover:bg-amber-200 text-amber-800">
+                            解鎖
+                        </button>
+                        
+                        <button onclick="copySlotInfo('slot_user_pavilion_1782871524313')" title="複製分享文字" class="p-1.5 text-stone-400 hover:text-emerald-600 hover:bg-stone-100 rounded-lg transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                        </button>
+
+                        <button onclick="deleteRow('slot_user_pavilion_1782871524313')" title="刪除此列" class="p-1.5 text-stone-400 hover:text-red-500 hover:bg-stone-100 rounded-lg transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                    </div>
+
+                </div>
+                </div>
+
+                <div class="p-4 bg-stone-50 border-t border-stone-100 flex flex-wrap justify-between items-center gap-2">
+                    <button onclick="addNewRow()" class="text-sm bg-emerald-600 hover:bg-emerald-700 active:translate-y-0.5 text-white font-bold py-2 px-4 rounded-xl shadow-sm transition flex items-center space-x-1.5">
+                        <span>➕ 新增一列</span>
+                    </button>
+                    <div class="flex space-x-2">
+                        <!-- 測試音效按鈕 -->
+                        <button onclick="testSounds()" class="text-sm bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold py-2 px-4 rounded-xl transition flex items-center space-x-1">
+                            <span>🔊 測試音效</span>
+                        </button>
+                        <button onclick="resetAllRows()" class="text-sm bg-stone-200 hover:bg-stone-300 text-stone-700 font-bold py-2 px-4 rounded-xl transition">
+                            全部重置
+                        </button>
+                    </div>
+                </div>
+
+            </main>
+
+            <p class="text-center text-xs text-stone-400 mt-2">
+                ※ 提示：預估重生時間為「基準對時 + 剩餘時間 + 5分鐘」。點擊「開始」後鎖定倒數，並於重生前 20 秒播放預警音效。
+            </p>
+        </div>
+
+        <!-- 頁籤二：PWA 離線安裝 & 下載指南 -->
+        <div id="tab-content-pwa" class="space-y-6">
+            <section class="bg-white rounded-2xl p-6 shadow-sm border border-stone-200/60">
+                <h2 class="text-lg font-bold text-stone-800 mb-4 flex items-center">
+                    <span class="text-2xl mr-2">⚙️</span> PWA 自助打包與離線配置器
+                </h2>
+                
+                <p class="text-sm text-stone-600 mb-6 leading-relaxed">
+                    Progressive Web App (PWA) 技術可以讓您的網頁完美安裝至手機主畫面，並且擁有完全獨立的 App 視窗、圖示與高度防休眠特性。
+                    因為瀏覽器的限制，<strong>PWA 安裝需要將主網頁 (index.html) 與服務線程式 (sw.js) 放置於同個資料夾中部署</strong>。請點擊下方按鈕分別下載這兩個檔案：
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    <!-- 下載 index.html -->
+                    <div class="border border-stone-200 rounded-xl p-4 bg-stone-50 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-stone-800 text-sm mb-1 flex items-center">
+                                <span class="text-emerald-600 mr-1.5">📄</span> 1. 主網頁程式 (index.html)
+                            </h3>
+                            <p class="text-xs text-stone-500 mb-4 leading-normal">
+                                包含主計算面板與介面樣式，是主要的應用程式檔。
+                            </p>
+                        </div>
+                        <button onclick="downloadMainHtml()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-4 rounded-lg text-xs transition flex items-center justify-center space-x-1 shadow-sm">
+                            <span>⬇️ 下載 index.html</span>
+                        </button>
+                    </div>
+
+                    <!-- 下載 sw.js -->
+                    <div class="border border-stone-200 rounded-xl p-4 bg-stone-50 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-stone-800 text-sm mb-1 flex items-center">
+                                <span class="text-teal-600 mr-1.5">⚙️</span> 2. 服務線程式 (sw.js)
+                            </h3>
+                            <p class="text-xs text-stone-500 mb-4 leading-normal">
+                                滿足 PWA 離線標準的背景服務，是觸發手機彈出「安裝 App」提示的必備檔案。
+                            </p>
+                        </div>
+                        <button onclick="downloadServiceWorker()" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg text-xs transition flex items-center justify-center space-x-1 shadow-sm">
+                            <span>⬇️ 下載 sw.js</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 零門檻部署指南 -->
+                <div class="border-t border-stone-100 pt-6">
+                    <h3 class="font-bold text-stone-800 text-sm mb-3 flex items-center">
+                        <span class="text-xl mr-1.5">🚀</span> 零門檻免費網頁架設教學
+                    </h3>
+                    <ol class="list-decimal list-inside text-xs text-stone-600 space-y-3 leading-relaxed">
+                        <li>下載上方的兩個檔案： <code class="bg-stone-100 px-1 py-0.5 rounded text-red-500 font-mono">index.html</code> 與 <code class="bg-stone-100 px-1 py-0.5 rounded text-red-500 font-mono">sw.js</code>。</li>
+                        <li>在電腦上建立一個空資料夾，把這兩個檔案都放進去。</li>
+                        <li>打開瀏覽器，造訪免費拖放架站平台 <a href="https://app.netlify.com/drop" target="_blank" class="text-emerald-600 font-bold underline">Netlify Drop (https://app.netlify.com/drop)</a>。</li>
+                        <li>將剛剛的資料夾直接<strong>拖曳丟進 Netlify Drop 網頁正中間的虛線框內</strong>。</li>
+                        <li>架設完成！您會獲得一個專屬的雲端網址（例如：<code class="text-emerald-700 font-mono">https://xxxx.netlify.app</code>）。</li>
+                    </ol>
+                </div>
+
+                <!-- 手機安裝指南 -->
+                <div class="border-t border-stone-100 pt-6 mt-6">
+                    <h3 class="font-bold text-stone-800 text-sm mb-3 flex items-center">
+                        <span class="text-xl mr-1.5">📲</span> 手機主畫面安裝步驟 (PWA 模式)
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-stone-50 p-3.5 rounded-xl border border-stone-200/60">
+                            <h4 class="font-bold text-stone-800 text-xs mb-1.5 flex items-center">
+                                <span class="mr-1">🍏</span> iPhone / Safari 安裝
+                            </h4>
+                            <p class="text-xs text-stone-500 leading-normal">
+                                1. 用 iPhone 內建的 <strong>Safari</strong> 開啟您的專屬網址。<br>
+                                2. 點擊下方的<strong>「分享」</strong>按鈕（正方形往上箭頭）。<br>
+                                3. 往下滑選單，選擇<strong>「加入主畫面」</strong>，點擊右上角新增。<br>
+                                4. 回到桌面，點開可愛蘑菇圖示，即可以乾淨的 App 全螢幕模式執行。
+                            </p>
+                        </div>
+                        <div class="bg-stone-50 p-3.5 rounded-xl border border-stone-200/60">
+                            <h4 class="font-bold text-stone-800 text-xs mb-1.5 flex items-center">
+                                <span class="mr-1">🤖</span> Android / Chrome 安裝
+                            </h4>
+                            <p class="text-xs text-stone-500 leading-normal">
+                                1. 用 <strong>Chrome</strong> 開啟您的專屬網址。<br>
+                                2. 當偵測到 sw.js 運作時，螢幕下方會自動彈出<strong>「將皮克敏計算器加到主畫面」</strong>的提示。<br>
+                                3. 或點擊右上角「三個點」，選擇<strong>「安裝應用程式」</strong>或<strong>「加入主畫面」</strong>。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </div>
+
+    </div>
+
+    <!-- 彈出通知 (Toast) -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-emerald-800 text-white text-xs px-4 py-3 rounded-full shadow-lg opacity-100 transition-all duration-300 z-50 flex items-center space-x-1.5 opacity-0 pointer-events-none">
+        <span id="toast-icon">🌱</span>
+        <span id="toast-msg">🌱 【公園涼亭】已完成重生！</span>
+    </div>
+
+    <script>
+        // 每一列的狀態管理
+        let slots = [];
+        const DEFAULT_ROW_COUNT = 5;
+
+        // 子母畫面 (PiP) 與喚醒鎖定相關變數
+        let pipInterval = null;
+        let wakeLock = null;
+
+        // PWA 動態 Manifest 與 Service Worker 註冊器
+        window.onload = function() {
+            // PWA Manifest 動態生成
+            const manifestObj = {
+                "name": "皮克敏蘑菇重生快速計算器",
+                "short_name": "皮克敏重生",
+                "start_url": ".",
+                "display": "standalone",
+                "background_color": "#f7f5f0",
+                "theme_color": "#111827",
+                "icons": [
+                    {
+                        "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2310b981'/><text y='.75em' x='5' font-size='75'>🍄</text></svg>",
+                        "sizes": "192x192",
+                        "type": "image/svg+xml",
+                        "purpose": "any"
+                    },
+                    {
+                        "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%2310b981'/><text y='.75em' x='5' font-size='75'>🍄</text></svg>",
+                        "sizes": "512x512",
+                        "type": "image/svg+xml",
+                        "purpose": "any"
+                    }
+                ]
+            };
+            const manifestStr = JSON.stringify(manifestObj);
+            const link = document.createElement('link');
+            link.rel = 'manifest';
+            link.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(manifestStr);
+            document.head.appendChild(link);
+
+            // 嘗試向同層目錄註冊 PWA 服務
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js')
+                    .then(reg => console.log('PWA Service Worker 已順利在背景守護運作:', reg))
+                    .catch(err => console.log('單檔案即用模式，此狀態下無法使用離線 PWA 安裝。若需離線 App 化，請下載 sw.js：', err));
+            }
+
+            // 載入 LocalStorage
+            const stored = localStorage.getItem('pikmin_simple_slots');
+            if (stored) {
+                try {
+                    slots = JSON.parse(stored);
+                    slots.forEach(s => {
+                        if (s.remainingTime === undefined) {
+                            const m = s.min !== undefined ? s.min : 24;
+                            const sec = s.sec !== undefined ? s.sec : 35;
+                            s.remainingTime = `${m}:${String(sec).padStart(2, '0')}`;
+                        }
+                    });
+                } catch(e) {
+                    slots = [];
+                }
+            }
+
+            // 檢查並自動注入歷史計時項目 (公園涼亭 09:44:25, 龍湖廟 09:42:36)
+            const hasPavilion = slots.some(s => s.location === '公園涼亭');
+            const hasLonghu = slots.some(s => s.location === '龍湖廟');
+            const today = new Date();
+
+            if (!hasPavilion) {
+                const respawnTime = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9, 44, 25).getTime();
+                const defeatTime = respawnTime - (5 * 60 * 1000);
+                slots.unshift({
+                    id: 'slot_user_pavilion_' + Date.now(),
+                    location: '公園涼亭',
+                    remainingTime: '已在冷卻中',
+                    isLocked: true,
+                    lockTimestamp: defeatTime,
+                    targetDefeatTime: defeatTime,
+                    targetRespawnTime: respawnTime,
+                    alarmPlayed: false,
+                    warning20sPlayed: false
+                });
+            }
+
+            if (!hasLonghu) {
+                const respawnTime = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 9, 42, 36).getTime();
+                const defeatTime = respawnTime - (5 * 60 * 1000);
+                slots.unshift({
+                    id: 'slot_user_longhu_' + Date.now(),
+                    location: '龍湖廟',
+                    remainingTime: '已在冷卻中',
+                    isLocked: true,
+                    lockTimestamp: defeatTime,
+                    targetDefeatTime: defeatTime,
+                    targetRespawnTime: respawnTime,
+                    alarmPlayed: false,
+                    warning20sPlayed: false
+                });
+            }
+
+            if (slots.length === 0) {
+                for (let i = 0; i < DEFAULT_ROW_COUNT; i++) {
+                    slots.push(createEmptySlotObject());
+                }
+            }
+
+            saveSlots();
+            renderRows();
+
+            setInterval(updateLoop, 1000);
+            updateLoop();
+
+            // 監聽子母畫面關閉事件
+            const video = document.getElementById('pip-video');
+            video.addEventListener('leavepictureinpicture', () => {
+                document.getElementById('pip-btn-text').innerText = '啟動「手機浮動小視窗」';
+                document.getElementById('pip-btn-icon').innerText = '📺';
+                if (pipInterval) {
+                    clearInterval(pipInterval);
+                    pipInterval = null;
+                }
+                showToast("⏹️ 浮動視窗已關閉");
+            });
+        };
+
+        // 切換頁籤
+        function switchTab(tabId) {
+            const btnCalc = document.getElementById('tab-btn-calc');
+            const btnPwa = document.getElementById('tab-btn-pwa');
+            const contentCalc = document.getElementById('tab-content-calc');
+            const contentPwa = document.getElementById('tab-content-pwa');
+
+            if (tabId === 'calc') {
+                btnCalc.className = "flex-1 py-2.5 text-sm font-bold rounded-lg transition-all bg-white text-emerald-800 shadow-sm";
+                btnPwa.className = "flex-1 py-2.5 text-sm font-bold rounded-lg transition-all text-stone-500 hover:text-stone-800";
+                contentCalc.classList.remove('hidden');
+                contentPwa.classList.add('hidden');
+            } else {
+                btnPwa.className = "flex-1 py-2.5 text-sm font-bold rounded-lg transition-all bg-white text-emerald-800 shadow-sm";
+                btnCalc.className = "flex-1 py-2.5 text-sm font-bold rounded-lg transition-all text-stone-500 hover:text-stone-800";
+                contentPwa.classList.remove('hidden');
+                contentCalc.classList.add('hidden');
+            }
+        }
+
+        // 下載主程式 index.html
+        function downloadMainHtml() {
+            const htmlContent = document.documentElement.outerHTML;
+            const fullHtml = "<!DOCTYPE html>\n" + htmlContent;
+            const blob = new Blob([fullHtml], {type: 'text/html;charset=utf-8'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'index.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast("📥 已成功產生並下載主網頁！");
+        }
+
+        // 下載服務線 sw.js
+        function downloadServiceWorker() {
+            const swContent = `
+const CACHE_NAME = 'pikmin-mushroom-cache-v1';
+const ASSETS = [
+  './',
+  './index.html'
+];
+
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(ASSETS);
+    }).then(() => self.skipWaiting())
+  );
+});
+
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.map((key) => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
+      );
+    }).then(() => self.clients.claim())
+  );
+});
+
+self.addEventListener('fetch', (e) => {
+  e.respondWith(
+    caches.match(e.request).then((cachedResponse) => {
+      return cachedResponse || fetch(e.request);
+    })
+  );
+});
+`;
+            const blob = new Blob([swContent], {type: 'application/javascript;charset=utf-8'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'sw.js';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast("📥 已成功產生並下載 PWA 服務線！");
+        }
+
+        // 產生新欄位資料物件
+        function createEmptySlotObject() {
+            return {
+                id: 'slot_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+                location: '',
+                remainingTime: '24:35',
+                isLocked: false,
+                lockTimestamp: null,
+                targetDefeatTime: null,
+                targetRespawnTime: null,
+                alarmPlayed: false,
+                warning20sPlayed: false
+            };
+        }
+
+        function addNewRow() {
+            slots.push(createEmptySlotObject());
+            saveSlots();
+            renderRows();
+            showToast("✨ 已新增一行欄位");
+        }
+
+        function saveSlots() {
+            localStorage.setItem('pikmin_simple_slots', JSON.stringify(slots));
+        }
+
+        function formatTimeString(date) {
+            if (!date) return "--:--:--";
+            const h = String(date.getHours()).padStart(2, '0');
+            const m = String(date.getMinutes()).padStart(2, '0');
+            const s = String(date.getSeconds()).padStart(2, '0');
+            return `${h}:${m}:${s}`;
+        }
+
+        function formatCountdown(totalSeconds) {
+            if (totalSeconds <= 0) return "00:00";
+            const m = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+            const s = String(Math.floor(totalSeconds % 60)).padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function parseRemainingTime(str) {
+            if (!str) return 0;
+            str = str.trim().toLowerCase();
+            if (str === '已在冷卻中') return 0;
+
+            let hours = 0, minutes = 0, seconds = 0;
+            const hrMatch = str.match(/(\d+)\s*(?:時|h)/);
+            const minMatch = str.match(/(\d+)\s*(?:分|m)/);
+            const secMatch = str.match(/(\d+)\s*(?:秒|s)/);
+
+            if (hrMatch || minMatch || secMatch) {
+                if (hrMatch) hours = parseInt(hrMatch[1]) || 0;
+                if (minMatch) minutes = parseInt(minMatch[1]) || 0;
+                if (secMatch) seconds = parseInt(secMatch[1]) || 0;
+                return ((hours * 3600) + (minutes * 60) + seconds) * 1000;
+            }
+
+            const normalized = str.replace(/\s+/g, ':');
+            const parts = normalized.split(':').map(p => parseInt(p) || 0);
+
+            if (parts.length === 3) {
+                hours = parts[0];
+                minutes = parts[1];
+                seconds = parts[2];
+            } else if (parts.length === 2) {
+                minutes = parts[0];
+                seconds = parts[1];
+            } else if (parts.length === 1 && !isNaN(parts[0])) {
+                minutes = parts[0];
+            }
+
+            return ((hours * 3600) + (minutes * 60) + seconds) * 1000;
+        }
+
+        function deleteRow(id) {
+            slots = slots.filter(s => s.id !== id);
+            saveSlots();
+            renderRows();
+        }
+
+        function resetAllRows() {
+            slots = [];
+            for (let i = 0; i < DEFAULT_ROW_COUNT; i++) {
+                slots.push(createEmptySlotObject());
+            }
+            saveSlots();
+            renderRows();
+            showToast("🧹 已清除全部並恢復預設值");
+        }
+
+        function toggleLock(id) {
+            const slot = slots.find(s => s.id === id);
+            if (!slot) return;
+
+            if (!slot.isLocked) {
+                const now = Date.now();
+                const totalOffsetMs = parseRemainingTime(slot.remainingTime);
+                
+                if (totalOffsetMs <= 0 && slot.remainingTime !== '已在冷卻中') {
+                    showToast("⚠️ 請輸入有效的打倒時間！", "warning");
+                    return;
+                }
+
+                slot.isLocked = true;
+                slot.lockTimestamp = now;
+                slot.targetDefeatTime = now + totalOffsetMs;
+                slot.targetRespawnTime = slot.targetDefeatTime + (5 * 60 * 1000);
+                slot.alarmPlayed = false;
+                slot.warning20sPlayed = false;
+                showToast("🔒 已開始計時！重生時間已鎖定");
+            } else {
+                slot.isLocked = false;
+                slot.lockTimestamp = null;
+                slot.targetDefeatTime = null;
+                slot.targetRespawnTime = null;
+                if (slot.remainingTime === '已在冷卻中') {
+                    slot.remainingTime = '24:35';
+                }
+                slot.alarmPlayed = false;
+                slot.warning20sPlayed = false;
+                showToast("🔓 已解除計時狀態");
+            }
+
+            saveSlots();
+            renderRows();
+        }
+
+        function handleInputChange(id, field, val) {
+            const slot = slots.find(s => s.id === id);
+            if (!slot) return;
+
+            if (field === 'location') slot.location = val;
+            if (field === 'remainingTime') slot.remainingTime = val;
+
+            saveSlots();
+            updateLoop();
+        }
+
+        function copySlotInfo(id) {
+            const slot = slots.find(s => s.id === id);
+            if (!slot) return;
+
+            let respawnStr = "";
+            if (slot.isLocked && slot.targetRespawnTime) {
+                respawnStr = formatTimeString(new Date(slot.targetRespawnTime));
+            } else {
+                const now = Date.now();
+                const offsetMs = parseRemainingTime(slot.remainingTime);
+                respawnStr = formatTimeString(new Date(now + offsetMs + (5 * 60 * 1000)));
+            }
+
+            const locName = slot.location.trim() || "未命名地點";
+            const shareText = `🍄【皮克敏重生】📍 地點：${locName} ➡️ 🌱 重生時間：${respawnStr}`;
+
+            const tempInput = document.createElement("textarea");
+            tempInput.value = shareText;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+
+            showToast("📋 已複製分享文字！");
+        }
+
+        function playWarningSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const now = ctx.currentTime;
+                const beats = [0, 0.2, 0.4];
+                beats.forEach((delay) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(987.77, now + delay);
+                    gain.gain.setValueAtTime(0.25, now + delay);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.15);
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.start(now + delay);
+                    osc.stop(now + delay + 0.18);
+                });
+            } catch (e) {
+                console.warn("音效播放失敗：需要使用者點擊過網頁以授權。");
+            }
+        }
+
+        function playRespawnSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const now = ctx.currentTime;
+                const chords = [
+                    { f1: 523.25, f2: 1046.50 },
+                    { f1: 659.25, f2: 1318.51 },
+                    { f1: 783.99, f2: 1567.98 },
+                    { f1: 1046.50, f2: 2093.00 }
+                ];
+                chords.forEach((chord, i) => {
+                    const delay = i * 0.08;
+                    
+                    const osc1 = ctx.createOscillator();
+                    const gain1 = ctx.createGain();
+                    osc1.type = 'triangle';
+                    osc1.frequency.setValueAtTime(chord.f1, now + delay);
+                    gain1.gain.setValueAtTime(0.25, now + delay);
+                    gain1.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.4);
+                    osc1.connect(gain1);
+                    gain1.connect(ctx.destination);
+                    osc1.start(now + delay);
+                    osc1.stop(now + delay + 0.45);
+
+                    const osc2 = ctx.createOscillator();
+                    const gain2 = ctx.createGain();
+                    osc2.type = 'sine';
+                    osc2.frequency.setValueAtTime(chord.f2, now + delay);
+                    gain2.gain.setValueAtTime(0.12, now + delay);
+                    gain2.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.3);
+                    osc2.connect(gain2);
+                    gain2.connect(ctx.destination);
+                    osc2.start(now + delay);
+                    osc2.stop(now + delay + 0.35);
+                });
+            } catch (e) {
+                console.warn("音效播放失敗：需要使用者點擊過網頁以授權。");
+            }
+        }
+
+        function testSounds() {
+            showToast("🔊 測試：20 秒前預警音效...", "warning");
+            playWarningSound();
+            
+            setTimeout(() => {
+                showToast("🌱 測試：重生完成音效！", "respawn");
+                playRespawnSound();
+            }, 1200);
+        }
+
+        function showToast(msg, type = "success") {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMsg.innerText = msg;
+            if (type === "warning") {
+                toastIcon.innerText = "⏳";
+                toast.className = "fixed bottom-6 left-1/2 -translate-x-1/2 bg-amber-800 text-white text-xs px-4 py-3 rounded-full shadow-lg opacity-100 transition-all duration-300 z-50 flex items-center space-x-1.5";
+            } else if (type === "respawn") {
+                toastIcon.innerText = "🌱";
+                toast.className = "fixed bottom-6 left-1/2 -translate-x-1/2 bg-emerald-800 text-white text-xs px-4 py-3 rounded-full shadow-lg opacity-100 transition-all duration-300 z-50 flex items-center space-x-1.5";
+            } else {
+                toastIcon.innerText = "✨";
+                toast.className = "fixed bottom-6 left-1/2 -translate-x-1/2 bg-stone-900 text-white text-xs px-4 py-3 rounded-full shadow-lg opacity-100 transition-all duration-300 z-50 flex items-center space-x-1.5";
+            }
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'pointer-events-none');
+            }, 2500);
+        }
+
+        async function togglePip() {
+            const video = document.getElementById('pip-video');
+            
+            if (document.pictureInPictureElement) {
+                try {
+                    await document.exitPictureInPicture();
+                } catch (err) {
+                    console.error("退出子母畫面出錯:", err);
+                }
+            } else {
+                try {
+                    if (!video.requestPictureInPicture) {
+                        showToast("❌ 您的手機不支援子母畫面功能", "warning");
+                        return;
+                    }
+
+                    if (!pipInterval) {
+                        drawPipCanvas();
+                        pipInterval = setInterval(drawPipCanvas, 200);
+                    }
+
+                    if (video.srcObject === null) {
+                        const canvas = document.getElementById('pip-canvas');
+                        video.srcObject = canvas.captureStream(5);
+                    }
+
+                    await video.play();
+                    await video.requestPictureInPicture();
+                    
+                    document.getElementById('pip-btn-text').innerText = '關閉「手機浮動小視窗」';
+                    document.getElementById('pip-btn-icon').innerText = '⏹️';
+                    showToast("📱 浮動視窗已啟動！您現在可以切換回遊戲囉！");
+                } catch (err) {
+                    console.error("啟動子母畫面失敗:", err);
+                    showToast("❌ 啟動失敗，請先點擊網頁任意處，再試一次！", "warning");
+                }
+            }
+        }
+
+        function drawPipCanvas() {
+            const canvas = document.getElementById('pip-canvas');
+            const ctx = canvas.getContext('2d');
+            const now = Date.now();
+
+            ctx.fillStyle = '#111827';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#10b981';
+            ctx.font = 'bold 15px system-ui, -apple-system, sans-serif';
+            ctx.fillText('🍄 皮克敏重生監控中', 15, 30);
+
+            const nowStr = formatTimeString(new Date());
+            ctx.fillStyle = '#6b7280';
+            ctx.font = 'bold 11px monospace';
+            ctx.fillText(`時間: ${nowStr}`, 15, 52);
+
+            ctx.strokeStyle = '#374151';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(15, 62);
+            ctx.lineTo(285, 62);
+            ctx.stroke();
+
+            let activeCount = 0;
+            let y = 88;
+
+            slots.forEach(s => {
+                if (s.isLocked) {
+                    activeCount++;
+                    if (activeCount > 4) return;
+
+                    ctx.fillStyle = '#f9fafb';
+                    ctx.font = 'bold 13px system-ui, -apple-system, sans-serif';
+                    let locText = s.location.trim() || '未命名地點';
+                    if (locText.length > 8) locText = locText.substring(0, 7) + '..';
+                    ctx.fillText(`📍 ${locText}`, 15, y);
+
+                    const msToRespawn = s.targetRespawnTime - now;
+                    const secLeft = Math.ceil(msToRespawn / 1000);
+
+                    let timeText = '';
+                    if (secLeft > 0) {
+                        timeText = formatCountdown(secLeft);
+                        ctx.fillStyle = secLeft <= 30 ? '#ef4444' : '#f59e0b';
+                    } else {
+                        timeText = '已重生！';
+                        ctx.fillStyle = '#34d399';
+                    }
+
+                    ctx.font = 'bold 14px monospace';
+                    ctx.fillText(timeText, 210, y);
+
+                    y += 35;
+                }
+            });
+
+            if (activeCount === 0) {
+                ctx.fillStyle = '#9ca3af';
+                ctx.font = '13px system-ui, -apple-system, sans-serif';
+                ctx.fillText('尚未鎖定任何蘑菇倒數', 15, 110);
+                ctx.font = '11px system-ui, -apple-system, sans-serif';
+                ctx.fillText('請在計算器中輸入打倒時間並點「開始」', 15, 135);
+            }
+        }
+
+        async function toggleWakeLock() {
+            if (!('wakeLock' in navigator)) {
+                showToast("❌ 您的手機不支援保持常亮功能", "warning");
+                return;
+            }
+
+            if (wakeLock !== null) {
+                try {
+                    await wakeLock.release();
+                    wakeLock = null;
+                    document.getElementById('wake-btn-text').innerText = '保持螢幕喚醒：已關閉';
+                    document.getElementById('wake-btn-icon').innerText = '💡';
+                    showToast("💡 螢幕自動休眠設定已還原");
+                } catch (err) {
+                    console.error(err);
+                }
+            } else {
+                try {
+                    wakeLock = await navigator.wakeLock.request('screen');
+                    document.getElementById('wake-btn-text').innerText = '保持螢幕喚醒：運作中';
+                    document.getElementById('wake-btn-icon').innerText = '🌟';
+                    showToast("🌟 螢幕已鎖定常亮！手機不會自動變暗");
+                } catch (err) {
+                    console.error("螢幕喚醒失敗:", err);
+                    showToast("❌ 鎖定失敗，請點選網頁重試", "warning");
+                }
+            }
+        }
+
+        function updateLoop() {
+            const now = Date.now();
+            const nowTimeStr = formatTimeString(new Date(now));
+            
+            document.getElementById('current-time-display').innerText = `目前時間: ${nowTimeStr}`;
+
+            let stateChanged = false;
+            slots.forEach(s => {
+                const rowEl = document.getElementById(`row-${s.id}`);
+                const baseTimeEl = document.getElementById(`base-time-${s.id}`);
+                const respawnTimeEl = document.getElementById(`respawn-time-${s.id}`);
+                const countdownEl = document.getElementById(`countdown-${s.id}`);
+                
+                if (!rowEl || !baseTimeEl || !respawnTimeEl || !countdownEl) return;
+
+                let baseTimeStr = '--:--:--';
+                let respawnTimeStr = '--:--:--';
+                let countdownStr = '';
+                let isUrgent = false;
+                let isExpired = false;
+
+                if (s.isLocked && s.targetRespawnTime) {
+                    baseTimeStr = formatTimeString(new Date(s.lockTimestamp));
+                    const msToRespawn = s.targetRespawnTime - now;
+                    const secLeft = Math.ceil(msToRespawn / 1000);
+                    
+                    respawnTimeStr = formatTimeString(new Date(s.targetRespawnTime));
+                    
+                    if (secLeft > 0) {
+                        countdownStr = `⏳ 剩餘 ${formatCountdown(secLeft)}`;
+                        if (secLeft <= 30) {
+                            isUrgent = true;
+                        }
+                    } else {
+                        countdownStr = `🌱 已重生！`;
+                        isExpired = true;
+                    }
+
+                    if (msToRespawn <= 20000 && msToRespawn > 0 && !s.warning20sPlayed) {
+                        s.warning20sPlayed = true;
+                        playWarningSound();
+                        showToast(`⏳ 【${s.location || "未命名地點"}】將於 20 秒後重生！`, "warning");
+                        stateChanged = true;
+                    }
+
+                    if (msToRespawn <= 0 && !s.alarmPlayed) {
+                        s.alarmPlayed = true;
+                        playRespawnSound();
+                        showToast(`🌱 【${s.location || "未命名地點"}】已完成重生！`, "respawn");
+                        stateChanged = true;
+                    }
+                } else {
+                    baseTimeStr = nowTimeStr;
+                    const offsetMs = parseRemainingTime(s.remainingTime);
+                    if (offsetMs > 0) {
+                        const estDefeat = now + offsetMs;
+                        const estRespawn = estDefeat + (5 * 60 * 1000);
+                        respawnTimeStr = formatTimeString(new Date(estRespawn));
+                        countdownStr = "📡 對時中 (即時加算)";
+                    } else {
+                        respawnTimeStr = "--:--:--";
+                        countdownStr = "請設定時間";
+                    }
+                }
+
+                baseTimeEl.innerText = baseTimeStr;
+                respawnTimeEl.innerText = respawnTimeStr;
+                countdownEl.innerText = countdownStr;
+
+                rowEl.classList.remove('urgent-row', 'bg-stone-50', 'text-stone-400', 'bg-emerald-50/20');
+                if (isUrgent) {
+                    rowEl.classList.add('urgent-row');
+                    baseTimeEl.className = "font-mono text-sm font-bold text-red-500";
+                    respawnTimeEl.className = "font-mono text-base font-extrabold text-red-600";
+                    countdownEl.className = "text-[10px] text-red-500 font-bold mt-0.5";
+                } else if (isExpired) {
+                    rowEl.classList.add('bg-stone-50', 'text-stone-400');
+                    baseTimeEl.className = "font-mono text-sm font-medium text-stone-400";
+                    respawnTimeEl.className = "font-mono text-base font-extrabold text-stone-400";
+                    countdownEl.className = "text-[10px] text-stone-400 font-medium mt-0.5";
+                } else if (s.isLocked) {
+                    rowEl.classList.add('bg-emerald-50/20');
+                    baseTimeEl.className = "font-mono text-sm font-medium text-stone-500";
+                    respawnTimeEl.className = "font-mono text-base font-extrabold text-emerald-700";
+                    countdownEl.className = "text-[10px] text-stone-400 font-medium mt-0.5";
+                } else {
+                    baseTimeEl.className = "font-mono text-sm font-bold text-emerald-600 animate-pulse";
+                    respawnTimeEl.className = "font-mono text-base font-extrabold text-stone-700";
+                    countdownEl.className = "text-[10px] text-emerald-600 font-semibold mt-0.5";
+                }
+            });
+
+            if (stateChanged) {
+                saveSlots();
+            }
+        }
+
+        function renderRows() {
+            const container = document.getElementById('rows-container');
+            const now = Date.now();
+            const nowTimeStr = formatTimeString(new Date(now));
+            let html = '';
+
+            slots.forEach((s) => {
+                let baseTimeStr = '--:--:--';
+                let respawnTimeStr = '--:--:--';
+                let countdownStr = '';
+                let isUrgent = false;
+                let isExpired = false;
+
+                if (s.isLocked) {
+                    baseTimeStr = formatTimeString(new Date(s.lockTimestamp));
+                    const msToRespawn = s.targetRespawnTime - now;
+                    const secLeft = Math.ceil(msToRespawn / 1000);
+                    respawnTimeStr = formatTimeString(new Date(s.targetRespawnTime));
+                    if (secLeft > 0) {
+                        countdownStr = `⏳ 剩餘 ${formatCountdown(secLeft)}`;
+                        if (secLeft <= 30) isUrgent = true;
+                    } else {
+                        countdownStr = `🌱 已重生！`;
+                        isExpired = true;
+                    }
+                } else {
+                    baseTimeStr = nowTimeStr;
+                    const offsetMs = parseRemainingTime(s.remainingTime);
+                    if (offsetMs > 0) {
+                        const estDefeat = now + offsetMs;
+                        const estRespawn = estDefeat + (5 * 60 * 1000);
+                        respawnTimeStr = formatTimeString(new Date(estRespawn));
+                        countdownStr = "📡 對時中 (即時加算)";
+                    } else {
+                        respawnTimeStr = "--:--:--";
+                        countdownStr = "請設定時間";
+                    }
+                }
+
+                let rowBgClass = '';
+                if (isUrgent) {
+                    rowBgClass = 'urgent-row';
+                } else if (isExpired) {
+                    rowBgClass = 'bg-stone-50 text-stone-400';
+                } else if (s.isLocked) {
+                    rowBgClass = 'bg-emerald-50/20';
+                }
+
+                html += `
+                <div id="row-${s.id}" class="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 p-4 items-center transition-all duration-200 ${rowBgClass}">
+                    
+                    <div class="col-span-1 md:col-span-3 flex items-center space-x-2">
+                        <span class="md:hidden text-xs text-stone-400 font-bold w-20">📍 地點：</span>
+                        <input type="text" 
+                               value="${s.location}" 
+                               placeholder="輸入地點 (例如: 捷運站)" 
+                               oninput="handleInputChange('${s.id}', 'location', this.value)"
+                               ${s.isLocked ? 'disabled' : ''}
+                               class="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition text-sm disabled:opacity-75 disabled:bg-stone-100 font-medium">
+                    </div>
+
+                    <div class="col-span-1 md:col-span-3 flex items-center space-x-2 justify-start md:justify-center">
+                        <span class="md:hidden text-xs text-stone-400 font-bold w-20">🕒 基準時間：</span>
+                        <div class="flex items-center space-x-1.5 px-3 py-2 bg-stone-50 border border-stone-200/60 rounded-xl w-full md:w-auto justify-center min-w-[130px]">
+                            <span id="base-time-${s.id}" class="font-mono text-sm font-bold text-emerald-600">
+                                ${baseTimeStr}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-span-1 md:col-span-2 flex items-center space-x-2">
+                        <span class="md:hidden text-xs text-stone-400 font-bold w-20">⏳ 剩餘打倒：</span>
+                        <input type="text" 
+                               value="${s.remainingTime}" 
+                               placeholder="24:35 或 24" 
+                               oninput="handleInputChange('${s.id}', 'remainingTime', this.value)"
+                               ${s.isLocked ? 'disabled' : ''}
+                               class="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition text-sm text-center font-bold font-mono disabled:opacity-75 disabled:bg-stone-100">
+                    </div>
+
+                    <div class="col-span-1 md:col-span-2 flex md:flex-col justify-between md:justify-center items-center md:items-center">
+                        <span class="md:hidden text-xs text-stone-400 font-bold w-20">🌱 重生刷新：</span>
+                        <div class="text-right md:text-center">
+                            <div id="respawn-time-${s.id}" class="font-mono text-base font-extrabold ${s.isLocked ? (isUrgent ? 'text-red-600' : 'text-emerald-700') : 'text-stone-700'}">
+                                ${respawnTimeStr}
+                            </div>
+                            <div id="countdown-${s.id}" class="text-[10px] ${isUrgent ? 'text-red-500 font-bold' : 'text-stone-400'} font-medium mt-0.5">
+                                ${countdownStr}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-span-1 md:col-span-2 flex items-center justify-end space-x-1 pt-2 md:pt-0 border-t border-dashed border-stone-100 md:border-t-0">
+                        <button onclick="toggleLock('${s.id}')" 
+                                class="flex-1 md:flex-initial text-xs font-bold py-1.5 px-3 rounded-lg transition-colors ${
+                                    s.isLocked 
+                                    ? 'bg-amber-100 hover:bg-amber-200 text-amber-800' 
+                                    : 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                                }">
+                            ${s.isLocked ? '解鎖' : '開始'}
+                        </button>
+                        
+                        <button onclick="copySlotInfo('${s.id}')" 
+                                title="複製分享文字" 
+                                class="p-1.5 text-stone-400 hover:text-emerald-600 hover:bg-stone-100 rounded-lg transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                        </button>
+
+                        <button onclick="deleteRow('${s.id}')" 
+                                title="刪除此列" 
+                                class="p-1.5 text-stone-400 hover:text-red-500 hover:bg-stone-100 rounded-lg transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        </button>
+                    </div>
+
+                </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+    </script>
+
+</body></html>
