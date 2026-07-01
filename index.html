@@ -84,8 +84,8 @@
             </div>
         </section>
 
-        <!-- 隱藏用於子母畫面(PiP)渲染的 Canvas 與 Video 元素 (不可使用 hidden/display:none，以免瀏覽器優化導致視訊流停止渲染) -->
-        <div style="position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none; left: -9999px;">
+        <!-- 微米級無視覺定位容器 (避免 hidden/display:none 導致手機瀏覽器不渲染 Canvas 視訊流) -->
+        <div style="position: fixed; width: 10px; height: 10px; bottom: 10px; right: 10px; opacity: 0.001; pointer-events: none; z-index: -9999; overflow: hidden;">
             <canvas id="pip-canvas" width="300" height="240"></canvas>
             <video id="pip-video" autoplay playsinline muted></video>
         </div>
@@ -521,41 +521,81 @@
             }, 2500);
         }
 
+        // 📱 核心黑科技：在背景產生完全靜音的音軌，防止 iOS/Android 背景自動暫停子母畫面
+        function createSilenceAudioTrack() {
+            try {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                const ctx = new AudioContextClass();
+                const dst = ctx.createMediaStreamDestination();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                gain.gain.value = 0; // 完全靜音
+                osc.connect(gain);
+                gain.connect(dst);
+                osc.start();
+                return dst.stream.getAudioTracks()[0];
+            } catch (e) {
+                console.warn("建立靜音防睡眠音軌失敗：", e);
+                return null;
+            }
+        }
+
         async function togglePip() {
             const video = document.getElementById('pip-video');
             const canvas = document.getElementById('pip-canvas');
             
-            if (document.pictureInPictureElement) {
+            // 判定是否正處於子母畫面中 (相容標準與 iOS 模式)
+            const isCurrentlyPip = document.pictureInPictureElement || 
+                                   (video.webkitPresentationMode === 'picture-in-picture');
+
+            if (isCurrentlyPip) {
                 try {
-                    await document.exitPictureInPicture();
+                    if (document.exitPictureInPicture) {
+                        await document.exitPictureInPicture();
+                    } else if (video.webkitSetPresentationMode) {
+                        video.webkitSetPresentationMode('inline');
+                    }
                 } catch (err) {
                     console.error("退出子母畫面出錯:", err);
                 }
             } else {
                 try {
-                    if (!video.requestPictureInPicture) {
-                        showToast("❌ 您的瀏覽器或裝置不支援子母畫面功能", "warning");
-                        return;
-                    }
-
                     // 1. 確保畫布每 200 毫秒（每秒 5 次）在背景持續更新畫面
                     if (!pipInterval) {
                         drawPipCanvas();
                         pipInterval = setInterval(drawPipCanvas, 200);
                     }
 
-                    // 2. 將畫布串流綁定至視訊元素
+                    // 2. 將畫布串流綁定至視訊元素，並注入防休眠音軌
                     if (video.srcObject === null) {
-                        video.srcObject = canvas.captureStream(5);
+                        const stream = canvas.captureStream(5);
+                        
+                        // 注入靜音防休眠音軌，使 iOS 允許在背景維持播放狀態
+                        const silentTrack = createSilenceAudioTrack();
+                        if (silentTrack) {
+                            stream.addTrack(silentTrack);
+                        }
+                        
+                        video.srcObject = stream;
                     }
 
-                    // 3. 播放並直接進入子母畫面 (同步手勢堆疊內執行，避免被判定為非 transient gesture)
+                    // 3. 撥放視訊
                     await video.play();
-                    await video.requestPictureInPicture();
+
+                    // 4. 觸發子母畫面 (優先採用標準 API，iOS 則使用 Safari 專屬內建展示模式 API)
+                    if (video.requestPictureInPicture) {
+                        await video.requestPictureInPicture();
+                    } else if (video.webkitSupportsPresentationMode && typeof video.webkitSetPresentationMode === 'function') {
+                        // 針對 iOS Safari 專利支援的 Picture-In-Picture 核心管道
+                        video.webkitSetPresentationMode('picture-in-picture');
+                    } else {
+                        showToast("❌ 您的瀏覽器核心不支援子母畫面 (PiP) 功能", "warning");
+                        return;
+                    }
                     
                     document.getElementById('pip-btn-text').innerText = '關閉「手機浮動小視窗」';
                     document.getElementById('pip-btn-icon').innerText = '⏹️';
-                    showToast("📱 浮動視窗已啟動！您現在可以切換回遊戲囉！");
+                    showToast("📱 浮動視窗已啟動！您可以放心地切換回皮克敏遊戲囉！");
                 } catch (err) {
                     console.error("啟動子母畫面失敗:", err);
                     showToast("❌ 啟動失敗，請先點擊網頁任意處，再試一次！", "warning");
