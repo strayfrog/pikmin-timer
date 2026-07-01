@@ -494,6 +494,7 @@
             showToast("📋 已複製分享文字！");
         }
         // 快速處理鬧鐘設定
+        // 快速處理鬧鐘設定
         function copyTimeForAlarm(targetTime) {
             if (!targetTime) {
                 showToast("⚠️ 請先鎖定時間！", "warning");
@@ -501,15 +502,14 @@
             }
 
             const date = new Date(targetTime);
-            // 格式化為 HH:MM，方便使用者手動設定鬧鐘
+            // 格式化為 HH:MM
             const timeStr = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
             
             // 寫入剪貼簿
             navigator.clipboard.writeText(timeStr).then(() => {
-                showToast(`✅ 已複製時間 ${timeStr}，請貼上到您的鬧鐘 App！`);
-                
-                // 嘗試喚起 iOS 時鐘 App (部分 iOS 版本支援 clock-timer:// 或 clock://)
-                window.location.href = "clock-timer://";
+                // 不使用會報錯的 window.location.href
+                // 改為更友善的互動提示
+                alert(`時間 ${timeStr} 已複製！\n\n請切換到「時鐘」App，點選鬧鐘並「貼上」即可設定。`);
             }).catch(err => {
                 showToast("❌ 複製失敗，請手動記下時間");
             });
