@@ -100,6 +100,10 @@
                         <span id="pip-btn-icon">📺</span>
                         <span id="pip-btn-text">手機浮動視窗</span>
                     </button>
+                    <!-- 5秒後測試音效按鈕 -->
+                    <button onclick="testSoundsDelayed()" class="flex-1 md:flex-initial text-xs bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-3 rounded-xl transition flex items-center justify-center space-x-1 shadow-sm active:translate-y-0.5">
+                        <span>⏳ 5秒後測試</span>
+                    </button>
                     <!-- 測試音效按鈕 -->
                     <button onclick="testSounds()" class="flex-1 md:flex-initial text-xs bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold py-2 px-3 rounded-xl transition flex items-center justify-center space-x-1">
                         <span>🔊 測試音效</span>
@@ -520,6 +524,32 @@
             }, 1200);
         }
 
+        // 📱 核心功能：5 秒後延遲播放音效（用於測試背景休眠）
+        function testSoundsDelayed() {
+            getAudioContext(); // 必須在第一時間點擊事件中直接執行，解鎖手機系統瀏覽器音訊限制
+            let secondsLeft = 5;
+            showToast(`⏳ 將於 ${secondsLeft} 秒後播放測試音效，請立刻切換視窗！`, "warning");
+
+            const interval = setInterval(() => {
+                secondsLeft--;
+                if (secondsLeft > 0) {
+                    showToast(`⏳ 將於 ${secondsLeft} 秒後播放測試音效...`, "warning");
+                } else {
+                    clearInterval(interval);
+                }
+            }, 1000);
+
+            setTimeout(() => {
+                showToast("🔊 測試：20 秒前預警音效...", "warning");
+                playWarningSound();
+
+                setTimeout(() => {
+                    showToast("🌱 測試：重生完成音效！", "respawn");
+                    playRespawnSound();
+                }, 1200);
+            }, 5000);
+        }
+
         // 彈出通知 (Toast) 實作
         function showToast(msg, type = "success") {
             const toast = document.getElementById('toast');
@@ -682,7 +712,7 @@
             if (activeCount === 0) {
                 ctx.fillStyle = '#9ca3af';
                 ctx.font = '13px system-ui, -apple-system, sans-serif';
-                ctx.fillText('尚未鎖定任何蘑菇倒數', 15, 110);
+                ctx.fillText('尚未鎖定 any 蘑菇倒數', 15, 110);
                 ctx.font = '11px system-ui, -apple-system, sans-serif';
                 ctx.fillText('請在計算器中輸入剩餘打倒時間並點「開始」', 15, 135);
             }
