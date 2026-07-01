@@ -45,7 +45,7 @@
 
     <div class="max-w-5xl mx-auto px-4 py-6">
         
-        <!-- 標頭區 -->
+        <!-- 標頭區：移除所有大片說明，精簡成一行 -->
         <header class="flex justify-between items-center bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-stone-200/60 mb-6 gap-4">
             <div class="flex items-center space-x-3">
                 <span class="text-3xl">🍄</span>
@@ -415,6 +415,7 @@
             updateLoop();
         }
 
+        // 複製分享文字
         function copySlotInfo(id) {
             const slot = slots.find(s => s.id === id);
             if (!slot) return;
