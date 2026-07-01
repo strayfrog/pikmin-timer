@@ -145,6 +145,22 @@
     </div>
 
     <script>
+        // 🚨 終極快取解鎖器：如果偵測到舊版 PWA 服務註冊，強制註銷並清理快取，確保 100% 下載最新 HTML！
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                for(let registration of registrations) {
+                    registration.unregister().then(function() {
+                        console.log('舊版快取服務已成功註銷，手機已解鎖快取鎖定！');
+                    });
+                }
+            });
+            if ('caches' in window) {
+                caches.keys().then(function(names) {
+                    for (let name of names) caches.delete(name);
+                });
+            }
+        }
+
         // 每一列的狀態管理
         let slots = [];
         const DEFAULT_ROW_COUNT = 5;
@@ -549,7 +565,7 @@
         function testSoundsDelayed() {
             getAudioContext(); // 必須在第一時間點擊事件中直接執行，解鎖手機系統瀏覽器音訊限制
             let secondsLeft = 5;
-            showToast("⏳ 將於 5 秒後播放測試音效，請立刻切換視窗！", "warning");
+            showToast(`⏳ 將於 ${secondsLeft} 秒後播放測試音效，請立刻切換視窗！`, "warning");
 
             const interval = setInterval(() => {
                 secondsLeft--;
@@ -658,15 +674,6 @@
                             stream.addTrack(silentTrack);
                         }
                         video.srcObject = stream;
-                    }
-
-                    // 關鍵修正：在請求 PiP 之前，如果 readyState 尚未就緒 (< 1 表示 HAVE_NOTHING)，非同步等待其 metadata 載入
-                    if (video.readyState < 1) {
-                        await new Promise((resolve) => {
-                            video.addEventListener('loadedmetadata', resolve, { once: true });
-                            // 安全防鎖死保險，500毫秒後自動繼續
-                            setTimeout(resolve, 500);
-                        });
                     }
 
                     video.play().catch(err => console.log("視訊播放預防性錯誤捕獲:", err));
