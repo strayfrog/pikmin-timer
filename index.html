@@ -19,10 +19,12 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIwIiBmaWxsPSIjMTBiOTgxIi8+PHRleHQgeT0iNzUiIHg9IjEwIiBmb250LXNpemU9IjcwIj7wn424PC90ZXh0Pjwvc3ZnPg==">
 
     <!-- Tailwind CSS -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <script src="https://cdn.tailwindcss.com?v=20260701"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+<script src="https://cdn.tailwindcss.com?v=20260701"></script>
+
+<link rel="stylesheet" href="style.css?v=20260701">
+<script src="app.js?v=20260701"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Noto+Sans+TC:wght=400;500;700&display=swap');
         body {
@@ -60,12 +62,9 @@
                 </div>
             </div>
             <!-- 說明指南按鈕 -->
-            <button onclick="requestNotificationPermission()" class="text-xs bg-emerald-100 hover:bg-emerald-200 active:translate-y-0.5 text-emerald-800 font-bold py-1.5 px-3 rounded-xl transition flex items-center space-x-1">
-    <span>🔔 開啟通知</span>
-</button>
-<button onclick="toggleGuideModal()" class="text-xs bg-stone-100 hover:bg-stone-200 active:translate-y-0.5 text-stone-700 font-bold py-1.5 px-3 rounded-xl transition flex items-center space-x-1">
-    <span>📖 說明</span>
-</button>
+            <button onclick="toggleGuideModal()" class="text-xs bg-stone-100 hover:bg-stone-200 active:translate-y-0.5 text-stone-700 font-bold py-1.5 px-3 rounded-xl transition flex items-center space-x-1">
+                <span>📖 說明指南</span>
+            </button>
         </header>
 
         <!-- 微米級無視覺定位容器 (避免手機瀏覽器不渲染 Canvas 導致視訊流中斷，改用極致小尺寸置於背景) -->
@@ -493,27 +492,7 @@
 
             showToast("📋 已複製分享文字！");
         }
-        // 快速處理鬧鐘設定
-        function copyTimeForAlarm(targetTime) {
-            if (!targetTime) {
-                showToast("⚠️ 請先鎖定時間！", "warning");
-                return;
-            }
 
-            const date = new Date(targetTime);
-            // 格式化為 HH:MM，方便使用者手動設定鬧鐘
-            const timeStr = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
-            
-            // 寫入剪貼簿
-            navigator.clipboard.writeText(timeStr).then(() => {
-                showToast(`✅ 已複製時間 ${timeStr}，請貼上到您的鬧鐘 App！`);
-                
-                // 嘗試喚起 iOS 時鐘 App (部分 iOS 版本支援 clock-timer:// 或 clock://)
-                window.location.href = "clock-timer://";
-            }).catch(err => {
-                showToast("❌ 複製失敗，請手動記下時間");
-            });
-        }
         function playWarningSound() {
             try {
                 const ctx = getAudioContext();
@@ -536,14 +515,7 @@
             }
         }
 
-        function playRespawnSound(locationName = "蘑菇") {
-            // 系統推播通知
-            if (Notification.permission === "granted") {
-                new Notification("🍄 皮克敏重生提醒", {
-                    body: `地點：${locationName} 的蘑菇已重生！`,
-                    requireInteraction: true
-                });
-            }
+        function playRespawnSound() {
             try {
                 const ctx = getAudioContext();
                 const now = ctx.currentTime;
@@ -999,11 +971,7 @@
                                 }">
                             ${s.isLocked ? '解鎖' : '開始'}
                         </button>
-                        <button onclick="copyTimeForAlarm('${s.targetRespawnTime}')" 
-                                class="p-1 text-sky-500 hover:bg-sky-50 rounded-lg transition-colors"
-                                title="複製重生時間設定鬧鐘">
-                            ⏰
-                        </button>
+                        
                         <!-- 刪除 -->
                         <button onclick="deleteRow('${s.id}')" 
                                 title="刪除此列" 
