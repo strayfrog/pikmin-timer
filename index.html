@@ -84,9 +84,11 @@
             </div>
         </section>
 
-        <!-- 隱藏用於子母畫面(PiP)渲染的 Canvas 與 Video 元素 -->
-        <canvas id="pip-canvas" width="300" height="240" class="hidden"></canvas>
-        <video id="pip-video" autoplay playsinline muted class="hidden"></video>
+        <!-- 隱藏用於子母畫面(PiP)渲染的 Canvas 與 Video 元素 (不可使用 hidden/display:none，以免瀏覽器優化導致視訊流停止渲染) -->
+        <div style="position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none; left: -9999px;">
+            <canvas id="pip-canvas" width="300" height="240"></canvas>
+            <video id="pip-video" autoplay playsinline muted></video>
+        </div>
 
         <!-- 計算表格主結構 -->
         <main class="bg-white rounded-2xl shadow-sm border border-stone-200/60 overflow-hidden">
@@ -521,6 +523,7 @@
 
         async function togglePip() {
             const video = document.getElementById('pip-video');
+            const canvas = document.getElementById('pip-canvas');
             
             if (document.pictureInPictureElement) {
                 try {
@@ -531,20 +534,22 @@
             } else {
                 try {
                     if (!video.requestPictureInPicture) {
-                        showToast("❌ 您的手機不支援子母畫面功能", "warning");
+                        showToast("❌ 您的瀏覽器或裝置不支援子母畫面功能", "warning");
                         return;
                     }
 
+                    // 1. 確保畫布每 200 毫秒（每秒 5 次）在背景持續更新畫面
                     if (!pipInterval) {
                         drawPipCanvas();
                         pipInterval = setInterval(drawPipCanvas, 200);
                     }
 
+                    // 2. 將畫布串流綁定至視訊元素
                     if (video.srcObject === null) {
-                        const canvas = document.getElementById('pip-canvas');
                         video.srcObject = canvas.captureStream(5);
                     }
 
+                    // 3. 播放並直接進入子母畫面 (同步手勢堆疊內執行，避免被判定為非 transient gesture)
                     await video.play();
                     await video.requestPictureInPicture();
                     
