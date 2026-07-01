@@ -870,61 +870,53 @@
                     rowBgClass = 'bg-emerald-50/20';
                 }
 
-                // 核心排版重構：手機版徹底消滅所有贅字標籤，實現極簡卡片化
+                // 核心排版重構：手機版與PC版完全共享單一對齊橫向網格，不生成任何垂直堆疊重複標籤！
                 html += `
                 <!-- 行槽 (${s.id}) -->
-                <div id="row-${s.id}" class="flex flex-col md:grid md:grid-cols-12 gap-3 md:gap-4 p-4 items-stretch md:items-center transition-all duration-200 ${rowBgClass}">
+                <div id="row-${s.id}" class="grid grid-cols-12 gap-1.5 md:gap-4 p-2 md:p-4 items-center transition-all duration-200 text-center ${rowBgClass}">
                     
-                    <!-- 1. 地點欄：佔滿整行 (手機與PC一致) -->
-                    <div class="col-span-1 md:col-span-3 flex items-center">
+                    <!-- 1. 地點欄：水平對齊 -->
+                    <div class="col-span-3 text-left">
                         <input type="text" 
                                value="${s.location}" 
-                               placeholder="輸入地點 (例如: 捷運站)" 
+                               placeholder="輸入地點" 
                                oninput="handleInputChange('${s.id}', 'location', this.value)"
                                ${s.isLocked ? 'disabled' : ''}
-                               class="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition text-sm disabled:opacity-75 disabled:bg-stone-100 font-medium">
+                               class="w-full px-1.5 py-1.5 md:px-3 md:py-2 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition text-[11px] md:text-sm disabled:opacity-75 disabled:bg-stone-100 font-medium">
                     </div>
 
-                    <!-- 手機版微型格：將基準時間、剩餘時間、預計重生時間整併成一列 3 欄，完全移除中文重複標籤 -->
-                    <div class="grid grid-cols-3 gap-2 md:contents">
-                        
-                        <!-- 2. 基準時間 -->
-                        <div class="bg-stone-50/80 md:bg-transparent p-2 md:p-0 rounded-xl border border-stone-100 md:border-0 flex flex-col md:flex-row items-center justify-center md:col-span-3">
-                            <span class="md:hidden text-[9px] text-stone-400 font-bold mb-0.5">🕒 基準</span>
-                            <span id="base-time-${s.id}" class="font-mono text-xs md:text-sm font-bold text-emerald-600">
-                                ${baseTimeStr}
-                            </span>
-                        </div>
+                    <!-- 2. 基準時間 -->
+                    <div class="col-span-3 flex justify-center items-center">
+                        <span id="base-time-${s.id}" class="font-mono text-[11px] md:text-sm font-bold text-emerald-600">
+                            ${baseTimeStr}
+                        </span>
+                    </div>
 
-                        <!-- 3. 剩餘時間 -->
-                        <div class="flex flex-col justify-center items-center bg-stone-50 md:bg-transparent p-1.5 md:p-0 rounded-xl border border-stone-200/40 md:border-0 md:col-span-2">
-                            <span class="md:hidden text-[10px] text-stone-400 font-bold mb-0.5">⏳ 剩餘</span>
-                            <input type="text" 
-                                   value="${s.remainingTime}" 
-                                   placeholder="24:35 或 24" 
-                                   oninput="handleInputChange('${s.id}', 'remainingTime', this.value)"
-                                   ${s.isLocked ? 'disabled' : ''}
-                                   class="w-full bg-transparent md:bg-stone-50 border-0 md:border md:border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition text-xs md:text-sm text-center font-bold font-mono disabled:opacity-75 disabled:bg-stone-100 p-0 md:py-2">
-                        </div>
+                    <!-- 3. 剩餘時間 -->
+                    <div class="col-span-2 flex justify-center items-center">
+                        <input type="text" 
+                               value="${s.remainingTime}" 
+                               placeholder="24:35" 
+                               oninput="handleInputChange('${s.id}', 'remainingTime', this.value)"
+                               ${s.isLocked ? 'disabled' : ''}
+                               class="w-full bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 transition text-[11px] md:text-sm text-center font-bold font-mono disabled:opacity-75 disabled:bg-stone-100 py-1.5 md:py-2 px-1">
+                    </div>
 
-                        <!-- 4. 重生時間 -->
-                        <div class="bg-stone-50 md:bg-transparent p-1.5 rounded-xl border border-stone-200/60 md:border-0 flex flex-col justify-center items-center md:col-span-2">
-                            <span class="md:hidden text-[10px] text-stone-400 font-bold mb-0.5">🌱 重生</span>
-                            <div id="respawn-time-${s.id}" class="font-mono text-sm md:text-base font-extrabold ${s.isLocked ? (isUrgent ? 'text-red-600' : 'text-emerald-700') : 'text-stone-700'}">
-                                ${respawnTimeStr}
-                            </div>
-                            <div id="countdown-${s.id}" class="text-[9px] md:text-[10px] ${isUrgent ? 'text-red-500 font-bold' : 'text-stone-400'} font-medium">
-                                ${countdownStr}
-                            </div>
+                    <!-- 4. 重生時間 -->
+                    <div class="col-span-2 flex flex-col justify-center items-center">
+                        <div id="respawn-time-${s.id}" class="font-mono text-xs md:text-base font-extrabold ${s.isLocked ? (isUrgent ? 'text-red-600' : 'text-emerald-700') : 'text-stone-700'}">
+                            ${respawnTimeStr}
                         </div>
-
+                        <div id="countdown-${s.id}" class="text-[9px] md:text-[10px] ${isUrgent ? 'text-red-500 font-bold' : 'text-stone-400'} font-medium">
+                            ${countdownStr}
+                        </div>
                     </div>
 
                     <!-- 5. 控制與複製按鈕列 -->
-                    <div class="col-span-1 md:col-span-2 flex items-center justify-end space-x-1 pt-2 md:pt-0 border-t border-dashed border-stone-100 md:border-t-0">
+                    <div class="col-span-2 flex items-center justify-center space-x-0.5 md:space-x-1">
                         <!-- 開始/解鎖 -->
                         <button onclick="toggleLock('${s.id}')" 
-                                class="flex-1 md:flex-initial text-xs font-bold py-1.5 px-3 rounded-lg transition-colors ${
+                                class="text-[10px] md:text-xs font-bold py-1 px-1.5 md:px-3 rounded-lg transition-colors ${
                                     s.isLocked 
                                     ? 'bg-amber-100 hover:bg-amber-200 text-amber-800' 
                                     : 'bg-emerald-600 hover:bg-emerald-700 text-white'
@@ -935,15 +927,15 @@
                         <!-- 複製 -->
                         <button onclick="copySlotInfo('${s.id}')" 
                                 title="複製分享文字" 
-                                class="p-1.5 text-stone-400 hover:text-emerald-600 hover:bg-stone-100 rounded-lg transition-colors">
-                            <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                                class="p-1 text-stone-400 hover:text-emerald-600 hover:bg-stone-100 rounded-lg transition-colors hidden md:inline-block">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
                         </button>
 
                         <!-- 刪除 -->
                         <button onclick="deleteRow('${s.id}')" 
                                 title="刪除此列" 
-                                class="p-1.5 text-stone-400 hover:text-red-500 hover:bg-stone-100 rounded-lg transition-colors">
-                            <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                class="p-1 text-stone-400 hover:text-red-500 hover:bg-stone-100 rounded-lg transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                         </button>
                     </div>
 
