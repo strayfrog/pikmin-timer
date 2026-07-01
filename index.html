@@ -493,7 +493,27 @@
 
             showToast("📋 已複製分享文字！");
         }
+        // 快速處理鬧鐘設定
+        function copyTimeForAlarm(targetTime) {
+            if (!targetTime) {
+                showToast("⚠️ 請先鎖定時間！", "warning");
+                return;
+            }
 
+            const date = new Date(targetTime);
+            // 格式化為 HH:MM，方便使用者手動設定鬧鐘
+            const timeStr = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+            
+            // 寫入剪貼簿
+            navigator.clipboard.writeText(timeStr).then(() => {
+                showToast(`✅ 已複製時間 ${timeStr}，請貼上到您的鬧鐘 App！`);
+                
+                // 嘗試喚起 iOS 時鐘 App (部分 iOS 版本支援 clock-timer:// 或 clock://)
+                window.location.href = "clock-timer://";
+            }).catch(err => {
+                showToast("❌ 複製失敗，請手動記下時間");
+            });
+        }
         function playWarningSound() {
             try {
                 const ctx = getAudioContext();
@@ -979,7 +999,11 @@
                                 }">
                             ${s.isLocked ? '解鎖' : '開始'}
                         </button>
-                        
+                        <button onclick="copyTimeForAlarm('${s.targetRespawnTime}')" 
+                                class="p-1 text-sky-500 hover:bg-sky-50 rounded-lg transition-colors"
+                                title="複製重生時間設定鬧鐘">
+                            ⏰
+                        </button>
                         <!-- 刪除 -->
                         <button onclick="deleteRow('${s.id}')" 
                                 title="刪除此列" 
