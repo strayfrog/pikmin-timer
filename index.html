@@ -3,152 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>皮克敏蘑菇重生快速計算器</title>
-    
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="皮克敏重生">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#111827">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIwIiBmaWxsPSIjMTBiOTgxIi8+PHRleHQgeT0iNzUiIHg9IjEwIiBmb250LXNpemU9IjcwIj7wn424PC90ZXh0Pjwvc3ZnPg==">
-    <script src="https://cdn.tailwindcss.com?v=20260701"></script>
+    <title>皮克敏蘑菇重生計算器</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Noto+Sans+TC:wght=400;500;700&display=swap');
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: #f7f5f0; padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
-        @keyframes pulse-red { 0%, 100% { background-color: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.4); } 50% { background-color: rgba(239, 68, 68, 0.25); border-color: rgba(239, 68, 68, 0.6); } }
         .urgent-row { animation: pulse-red 1.5s infinite; }
+        @keyframes pulse-red { 0%, 100% { background-color: rgba(239, 68, 68, 0.1); } 50% { background-color: rgba(239, 68, 68, 0.25); } }
     </style>
 </head>
-<body class="min-h-screen text-stone-800 pb-12">
-    <div class="max-w-5xl mx-auto px-2 md:px-4 py-6">
-        <header class="flex justify-between items-center bg-white p-3 md:p-5 rounded-2xl shadow-sm border border-stone-200/60 mb-4 gap-4">
-            <div class="flex items-center space-x-3">
-                <span class="text-2xl md:text-3xl">🍄</span>
-                <div>
-                    <h1 class="text-sm md:text-xl font-bold text-stone-800">皮克敏重生計算器</h1>
-                    <div class="text-[10px] md:text-sm text-emerald-700 font-mono font-bold mt-0.5" id="current-time-display">目前時間: --:--:--</div>
-                </div>
-            </div>
-            <div class="flex gap-2">
-                <button onclick="requestNotificationPermission()" class="text-xs bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold py-1.5 px-3 rounded-xl transition">🔔 通知</button>
-            </div>
-        </header>
-
-        <main class="bg-white rounded-2xl shadow-sm border border-stone-200/60 overflow-hidden">
-            <div class="grid grid-cols-12 gap-1 md:gap-4 bg-stone-100 p-2.5 md:p-4 font-bold text-stone-600 text-xs text-center border-b">
-                <div class="col-span-4 text-left">📍 地點</div>
-                <div class="col-span-3">⏳ 倒數</div>
-                <div class="col-span-3">🌱 重生</div>
-                <div class="col-span-2">操作</div>
-            </div>
-            <div id="rows-container" class="divide-y divide-stone-100"></div>
-            <div class="p-4 bg-stone-50 flex justify-between">
-                <button onclick="addNewRow()" class="text-sm bg-emerald-600 text-white font-bold py-2 px-4 rounded-xl">➕ 新增</button>
-                <button onclick="toggleWakeLock()" id="btn-wakelock" class="text-xs bg-emerald-50 text-emerald-800 font-bold py-2 px-3 rounded-xl">💡 螢幕常亮</button>
-            </div>
-        </main>
+<body class="bg-stone-50 min-h-screen p-4">
+    <div class="max-w-4xl mx-auto bg-white rounded-xl shadow p-4">
+        <h1 class="text-xl font-bold mb-4">🍄 皮克敏蘑菇計時器</h1>
+        <div id="rows-container" class="space-y-2 mb-4"></div>
+        <div class="flex gap-2">
+            <button onclick="addNewRow()" class="bg-emerald-600 text-white px-4 py-2 rounded">➕ 新增</button>
+            <button onclick="togglePip()" class="bg-stone-800 text-white px-4 py-2 rounded">📺 懸浮視窗</button>
+        </div>
     </div>
 
-    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-stone-900 text-white text-xs px-4 py-3 rounded-full shadow-lg opacity-0 transition-all duration-300 z-50">
-        <span id="toast-msg">已鎖定計時</span>
+    <div class="hidden">
+        <canvas id="pip-canvas" width="300" height="200"></canvas>
+        <video id="pip-video" autoplay playsinline muted></video>
     </div>
 
     <script>
-        let slots = [];
-        let wakeLock = null;
-        let audioCtx = null;
+        let slots = JSON.parse(localStorage.getItem('pikmin_slots')) || [];
+        if (slots.length === 0) for(let i=0; i<3; i++) slots.push(createSlot());
 
-        function getAudioContext() {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            return audioCtx;
+        function createSlot() { 
+            return { id: Date.now() + Math.random(), location: '', time: '24:35', isLocked: false, targetRespawnTime: null }; 
         }
 
-        function requestNotificationPermission() {
-            if ("Notification" in window) {
-                Notification.requestPermission().then(p => showToast(p === 'granted' ? '✅ 通知已開啟' : '⚠️ 請手動開啟通知權限'));
+        function addNewRow() { slots.push(createSlot()); renderRows(); }
+        
+        function toggleLock(id) {
+            let s = slots.find(x => x.id === id);
+            if (!s.isLocked) {
+                s.isLocked = true;
+                const [m, sec] = s.time.split(':').map(Number);
+                s.targetRespawnTime = Date.now() + ((m * 60 + sec + 300) * 1000);
+            } else {
+                s.isLocked = false;
+            }
+            localStorage.setItem('pikmin_slots', JSON.stringify(slots));
+            renderRows();
+        }
+
+        function renderRows() {
+            const container = document.getElementById('rows-container');
+            container.innerHTML = slots.map(s => `
+                <div class="flex items-center gap-2 p-2 border rounded ${s.isLocked ? 'bg-emerald-50' : ''}">
+                    <input class="border p-1 w-24" value="${s.location}" onchange="updateSlot(${s.id}, 'location', this.value)">
+                    <input class="border p-1 w-16" value="${s.time}" onchange="updateSlot(${s.id}, 'time', this.value)">
+                    <span class="flex-1 text-xs font-mono">${s.isLocked ? new Date(s.targetRespawnTime).toLocaleTimeString() : '--:--'}</span>
+                    <button onclick="toggleLock(${s.id})" class="text-sm px-2 py-1 bg-stone-200">${s.isLocked ? '解鎖' : '開始'}</button>
+                    <button onclick="deleteRow(${s.id})" class="text-red-500">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function updateSlot(id, key, val) {
+            let s = slots.find(x => x.id === id);
+            s[key] = val;
+            localStorage.setItem('pikmin_slots', JSON.stringify(slots));
+        }
+
+        function deleteRow(id) {
+            slots = slots.filter(x => x.id !== id);
+            localStorage.setItem('pikmin_slots', JSON.stringify(slots));
+            renderRows();
+        }
+
+        async function togglePip() {
+            const v = document.getElementById('pip-video');
+            if (document.pictureInPictureElement) document.exitPictureInPicture();
+            else {
+                v.srcObject = document.getElementById('pip-canvas').captureStream(10);
+                await v.requestPictureInPicture();
             }
         }
 
-        function playWarningSound() {
-            try {
-                const ctx = getAudioContext();
-                const now = ctx.currentTime;
-                [0, 0.2, 0.4].forEach(d => {
-                    const osc = ctx.createOscillator();
-                    const gain = ctx.createGain();
-                    osc.frequency.setValueAtTime(987.77, now + d);
-                    gain.gain.setValueAtTime(0.25, now + d);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + d + 0.15);
-                    osc.connect(gain); gain.connect(ctx.destination);
-                    osc.start(now + d); osc.stop(now + d + 0.18);
-                });
-            } catch(e) {}
-        }
-
-        function playRespawnSound(loc) {
-            if (Notification.permission === "granted") new Notification("🍄 重生提醒", { body: `${loc} 已重生！` });
-            try {
-                const ctx = getAudioContext();
-                const now = ctx.currentTime;
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.frequency.setValueAtTime(1046.50, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
-                osc.connect(gain); gain.connect(ctx.destination);
-                osc.start(); osc.stop(now + 0.5);
-            } catch(e) {}
-        }
-
-        function copyTimeForAlarm(targetTime) {
-            if (!targetTime) return;
-            const d = new Date(targetTime);
-            const timeStr = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-            navigator.clipboard.writeText(timeStr).then(() => alert(`時間 ${timeStr} 已複製！請至鬧鐘 App 貼上。`));
-        }
-
-        function updateLoop() {
-            const now = Date.now();
-            document.getElementById('current-time-display').innerText = `目前時間: ${formatTimeString(new Date())}`;
-            slots.forEach(s => {
-                if (s.isLocked && s.targetRespawnTime) {
-                    const msLeft = s.targetRespawnTime - now;
-                    if (msLeft <= 20000 && msLeft > 0 && !s.warning20sPlayed) {
-                        s.warning20sPlayed = true; playWarningSound(); showToast(`⏳ ${s.location} 即將重生！`, "warning");
-                    }
-                    if (msLeft <= 0 && !s.alarmPlayed) {
-                        s.alarmPlayed = true; playRespawnSound(s.location);
-                    }
-                    const el = document.getElementById(`countdown-${s.id}`);
-                    if (el) el.innerText = msLeft > 0 ? `剩餘 ${formatCountdown(Math.ceil(msLeft/1000))}` : "已重生！";
-                }
-            });
-        }
-        
-        function formatTimeString(d) { return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`; }
-        function formatCountdown(sec) { return `${String(Math.floor(sec/60)).padStart(2,'0')}:${String(sec%60).padStart(2,'0')}`; }
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            document.getElementById('toast-msg').innerText = msg;
-            t.classList.remove('opacity-0');
-            setTimeout(() => t.classList.add('opacity-0'), 2500);
-        }
-        
-        // 其他必要函式保持原樣...
-        function toggleLock(id) { 
-            const s = slots.find(x => x.id === id);
-            if(!s.isLocked) { s.isLocked=true; s.targetRespawnTime = Date.now() + 1500000; } 
-            else { s.isLocked=false; }
-            renderRows();
-        }
-        function addNewRow() { slots.push(createEmptySlotObject()); renderRows(); }
-        function createEmptySlotObject() { return { id: Date.now(), location: '', isLocked: false, targetRespawnTime: null, warning20sPlayed: false, alarmPlayed: false }; }
-        function renderRows() { /* 同您原本邏輯，記得在按鈕區加入 copyTimeForAlarm('${s.targetRespawnTime}') */ }
-        setInterval(updateLoop, 1000);
+        renderRows();
     </script>
 </body>
 </html>
