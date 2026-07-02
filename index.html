@@ -719,12 +719,18 @@
             ctx.stroke();
 
             let activeCount = 0;
-            let y = 88;
+            let y = 85; // 微調起始高度
 
             slots.forEach(s => {
                 if (s.isLocked) {
+                    const msFromRespawn = now - s.targetRespawnTime;
+                    
+                    // 過濾：若重生已超過 5 分鐘，則不顯示
+                    if (msFromRespawn > 300000) return;
+
                     activeCount++;
-                    if (activeCount > 4) return;
+                    // 擴充為最多顯示 6 個項目
+                    if (activeCount > 6) return;
 
                     ctx.fillStyle = '#f9fafb';
                     ctx.font = 'bold 13px system-ui, -apple-system, sans-serif';
@@ -747,16 +753,14 @@
                     ctx.font = 'bold 14px monospace';
                     ctx.fillText(timeText, 210, y);
 
-                    y += 35;
+                    y += 28; // 微調間距以容納更多項目
                 }
             });
 
             if (activeCount === 0) {
                 ctx.fillStyle = '#9ca3af';
                 ctx.font = '13px system-ui, -apple-system, sans-serif';
-                ctx.fillText('尚未鎖定 any 蘑菇倒數', 15, 110);
-                ctx.font = '11px system-ui, -apple-system, sans-serif';
-                ctx.fillText('請在計算器中輸入剩餘打倒時間並點「開始」', 15, 135);
+                ctx.fillText('沒有監控中的蘑菇', 15, 110);
             }
         }
 
