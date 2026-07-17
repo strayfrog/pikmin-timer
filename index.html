@@ -719,42 +719,38 @@
             ctx.stroke();
 
             let activeCount = 0;
-            let y = 85; // 微調起始高度
+            let y = 85;
 
-            slots.forEach(s => {
-                if (s.isLocked) {
-                    const msFromRespawn = now - s.targetRespawnTime;
-                    
-                    // 過濾：若重生已超過 5 分鐘，則不顯示
-                    if (msFromRespawn > 300000) return;
+            // 1. 先過濾並排序：篩選出鎖定中且未過期(1分鐘內)的項目，按重生時間由近到遠排序
+            const displaySlots = slots
+                .filter(s => s.isLocked)
+                .filter(s => (now - s.targetRespawnTime) < 60000)
+                .sort((a, b) => a.targetRespawnTime - b.targetRespawnTime);
 
-                    activeCount++;
-                    // 擴充為最多顯示 6 個項目
-                    if (activeCount > 6) return;
+            // 2. 繪製邏輯
+            displaySlots.slice(0, 6).forEach(s => {
+                activeCount++;
+                ctx.fillStyle = '#f9fafb';
+                ctx.font = 'bold 13px system-ui, -apple-system, sans-serif';
+                let locText = s.location.trim() || '未命名地點';
+                if (locText.length > 8) locText = locText.substring(0, 7) + '..';
+                ctx.fillText(`📍 ${locText}`, 15, y);
 
-                    ctx.fillStyle = '#f9fafb';
-                    ctx.font = 'bold 13px system-ui, -apple-system, sans-serif';
-                    let locText = s.location.trim() || '未命名地點';
-                    if (locText.length > 8) locText = locText.substring(0, 7) + '..';
-                    ctx.fillText(`📍 ${locText}`, 15, y);
+                const msToRespawn = s.targetRespawnTime - now;
+                const secLeft = Math.ceil(msToRespawn / 1000);
 
-                    const msToRespawn = s.targetRespawnTime - now;
-                    const secLeft = Math.ceil(msToRespawn / 1000);
-
-                    let timeText = '';
-                    if (secLeft > 0) {
-                        timeText = formatCountdown(secLeft);
-                        ctx.fillStyle = secLeft <= 30 ? '#ef4444' : '#f59e0b';
-                    } else {
-                        timeText = '已重生！';
-                        ctx.fillStyle = '#34d399';
-                    }
-
-                    ctx.font = 'bold 14px monospace';
-                    ctx.fillText(timeText, 210, y);
-
-                    y += 28; // 微調間距以容納更多項目
+                let timeText = '';
+                if (secLeft > 0) {
+                    timeText = formatCountdown(secLeft);
+                    ctx.fillStyle = secLeft <= 30 ? '#ef4444' : '#f59e0b';
+                } else {
+                    timeText = '已重生！';
+                    ctx.fillStyle = '#34d399';
                 }
+
+                ctx.font = 'bold 14px monospace';
+                ctx.fillText(timeText, 210, y);
+                y += 28;
             });
 
             if (activeCount === 0) {
